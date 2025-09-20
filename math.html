@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الرياضيات - Six Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        @font-face {
+            font-family: 'Tajawal';
+            src: url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        }
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+        .tab-active {
+            border-bottom: 3px solid #1e3a8a;
+            color: #1e3a8a;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center">
+            <a href="index.html" class="text-blue-600">
+                <i data-feather="arrow-right" class="w-6 h-6"></i>
+            </a>
+            <h1 class="text-xl font-bold text-gray-800 mx-auto">الرياضيات</h1>
+        </div>
+    </header>
+
+    <!-- Tabs -->
+    <div class="flex border-b border-gray-200 container mx-auto px-4 mt-4">
+        <button id="practice-tab" class="px-4 py-2 text-gray-600 tab-active">تدريب</button>
+        <button id="test-tab" class="px-4 py-2 text-gray-600">اختبار</button>
+    </div>
+
+    <!-- Practice Content -->
+    <div id="practice-content" class="container mx-auto px-4 py-6">
+        <div class="grid grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-4 rounded-lg shadow text-center border border-blue-100">
+                <h3 class="font-bold text-blue-600">جدول 1</h3>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow text-center border border-blue-100">
+                <h3 class="font-bold text-blue-600">جدول 2</h3>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow text-center border border-blue-100">
+                <h3 class="font-bold text-blue-600">جدول 3</h3>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow text-center border border-blue-100">
+                <h3 class="font-bold text-blue-600">جدول 4</h3>
+            </div>
+            <!-- Add more tables up to 11 -->
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-6 text-center">
+            <h2 class="text-5xl font-bold text-blue-600 mb-8">1 × 1 = ؟</h2>
+            <input type="number" class="border border-gray-300 rounded-lg px-4 py-2 mb-4 w-32 text-center text-xl" placeholder="الجواب">
+            <button class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold">تحقق</button>
+            <p id="feedback-message" class="mt-4 text-green-600 font-bold hidden">عاش! إجابة صحيحة</p>
+            <div class="mt-8 text-sm text-gray-500">
+                <p>المستوى: 1 | السؤال: 1/10 | النقاط: 0</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Content -->
+    <div id="test-content" class="container mx-auto px-4 py-6 hidden">
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <div class="mb-4">
+                <h3 class="font-bold text-gray-700 mb-2">الاختبار: 10 أسئلة</h3>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: 10%"></div>
+                </div>
+            </div>
+            <div class="text-center py-8">
+                <p class="text-xl mb-4">حاصل ضرب 7 × 9 يساوي:</p>
+                <div class="grid grid-cols-2 gap-4">
+                    <button class="bg-gray-100 p-4 rounded-lg font-medium hover:bg-gray-200">56</button>
+                    <button class="bg-gray-100 p-4 rounded-lg font-medium hover:bg-gray-200">63</button>
+                    <button class="bg-gray-100 p-4 rounded-lg font-medium hover:bg-gray-200">72</button>
+                    <button class="bg-gray-100 p-4 rounded-lg font-medium hover:bg-gray-200">49</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <section class="bg-white mx-4 mt-6 rounded-xl shadow-md p-6">
+        <h3 class="font-bold text-gray-700 mb-4">إحصائياتك</h3>
+        <div class="grid grid-cols-3 gap-4 text-center">
+            <div>
+                <p class="text-2xl font-bold text-blue-600">12</p>
+                <p class="text-sm text-gray-500">محاولات</p>
+            </div>
+            <div>
+                <p class="text-2xl font-bold text-blue-600">78%</p>
+                <p class="text-sm text-gray-500">أفضل نتيجة</p>
+            </div>
+            <div>
+                <p class="text-2xl font-bold text-blue-600">65%</p>
+                <p class="text-sm text-gray-500">متوسط النجاح</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        feather.replace();
+        
+        // Practice feedback
+        document.querySelector('#practice-content button').addEventListener('click', function() {
+            const feedback = document.getElementById('feedback-message');
+            const messages = ['عاش!', 'بطل!', 'واو!', 'رائع!', 'ذيب!', 'استمر!'];
+            feedback.textContent = messages[Math.floor(Math.random() * messages.length)];
+            feedback.classList.remove('hidden');
+            setTimeout(() => feedback.classList.add('hidden'), 2000);
+        });
+
+        // Test feedback
+        document.querySelector('#test-content button').addEventListener('click', function() {
+            const feedback = document.getElementById('test-feedback');
+            const messages = ['عاش!', 'بطل!', 'واو!', 'رائع!', 'ذيب!', 'استمر!'];
+            feedback.textContent = messages[Math.floor(Math.random() * messages.length)];
+            feedback.classList.remove('hidden');
+            setTimeout(() => feedback.classList.add('hidden'), 2000);
+        });
+
+        // Tab switching
+        const practiceTab = document.getElementById('practice-tab');
+        const testTab = document.getElementById('test-tab');
+        const practiceContent = document.getElementById('practice-content');
+        const testContent = document.getElementById('test-content');
+        
+        practiceTab.addEventListener('click', () => {
+            practiceContent.classList.remove('hidden');
+            testContent.classList.add('hidden');
+            practiceTab.classList.add('tab-active');
+            testTab.classList.remove('tab-active');
+        });
+        
+        testTab.addEventListener('click', () => {
+            testContent.classList.remove('hidden');
+            practiceContent.classList.add('hidden');
+            testTab.classList.add('tab-active');
+            practiceTab.classList.remove('tab-active');
+        });
+    </script>
+</body>
+</html>
