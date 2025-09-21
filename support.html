@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الدعم - Six Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+        .main-gradient {
+            background: linear-gradient(135deg, #1e3a8a 0%, #0ea5e9 100%);
+        }
+        .gold-text {
+            color: #d4af37;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .support-modal {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80%;
+            background-color: white;
+            z-index: 1000;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+            display: block;
+        }
+        .support-modal-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .support-header {
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8fafc;
+        }
+        .support-messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            background-color: #f1f5f9;
+        }
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .received {
+            background-color: #ffffff;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .sent {
+            background-color: #3b82f6;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .support-input {
+            padding: 16px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            background-color: #ffffff;
+        }
+        .support-input input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 24px;
+            margin-left: 12px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .support-input input:focus {
+            border-color: #3b82f6;
+        }
+        .support-input button {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .support-input button:hover {
+            background-color: #2563eb;
+        }
+        .telegram-header {
+            background-color: #0088cc;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+        .telegram-icon {
+            background-color: #0088cc;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        .notification.show {
+            transform: translateX(0);
+        }
+        .notification.success {
+            background-color: #10b981;
+        }
+        .notification.error {
+            background-color: #ef4444;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="main-gradient text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <a href="index.html" class="text-white">
+                    <i data-feather="arrow-right" class="w-6 h-6"></i>
+                </a>
+                <h1 class="text-2xl font-bold gold-text">الدعم الفني</h1>
+                <div class="w-6"></div> <!-- Spacer for alignment -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Support Chat Modal -->
+    <div id="support-modal" class="support-modal">
+        <div class="support-modal-content">
+            <div class="support-header">
+                <div></div> <!-- Spacer -->
+                <h3 class="text-lg font-bold">الدردشة مع الدعم</h3>
+                <a href="index.html" class="text-gray-500 hover:text-gray-700">
+                    <i data-feather="x" class="w-6 h-6"></i>
+                </a>
+            </div>
+            <div class="support-messages" id="support-messages">
+                <div class="message received">
+                    مرحباً بك في دعم Six Pro. كيف يمكنني مساعدتك اليوم؟
+                </div>
+            </div>
+            <div class="support-input">
+                <input type="text" id="message-input" placeholder="اكتب رسالتك...">
+                <button id="send-message">
+                    <i data-feather="send" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Initialize feather icons
+        document.addEventListener('DOMContentLoaded', function() {
+            feather.replace();
+            
+            // DOM Elements
+            const sendMessage = document.getElementById('send-message');
+            const messageInput = document.getElementById('message-input');
+            const supportMessages = document.getElementById('support-messages');
+            const notification = document.getElementById('notification');
+            
+            // Chat state
+            let userId = null;
+            let lastUpdateId = 0;
+            let pollingInterval = null;
+            
+            // Generate unique user ID
+            function generateUserId() {
+                return 'user_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+            }
+            
+            // Initialize chat
+            userId = generateUserId();
+            startPolling();
+            
+            // Send message functionality
+            sendMessage.addEventListener('click', sendMessageHandler);
+            messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessageHandler();
+                }
+            });
+            
+            function sendMessageHandler() {
+                const message = messageInput.value.trim();
+                if (message && userId) {
+                    // Add user message to UI immediately
+                    addMessage(message, 'sent');
+                    messageInput.value = '';
+                    
+                    // Send message to Telegram bot with user ID
+                    sendToTelegram(message);
+                }
+            }
+            
+            function sendToTelegram(message) {
+                const botToken = '8246585020:AAF95qYlUKBS4L_2vmS5my_qFRJz4vfjAfA';
+                const adminChatId = '8186093463';
+                const text = `رسالة جديدة من المستخدم (${userId}):\n${message}`;
+                
+                // Send message to Telegram bot
+                fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        chat_id: adminChatId,
+                        text: text
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        showNotification('تم إرسال الرسالة', 'success');
+                    } else {
+                        showNotification('حدث خطأ أثناء إرسال الرسالة', 'error');
+                        addMessage('عذراً، حدث خطأ أثناء إرسال رسالتك. يرجى المحاولة مرة أخرى.', 'received');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('حدث خطأ في الاتصال', 'error');
+                    addMessage('عذراً، حدث خطأ في الاتصال. يرجى التحقق من اتصالك بالإنترنت.', 'received');
+                });
+            }
+            
+            function addMessage(text, type) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', type);
+                messageDiv.textContent = text;
+                supportMessages.appendChild(messageDiv);
+                supportMessages.scrollTop = supportMessages.scrollHeight;
+            }
+            
+            // Show notification
+            function showNotification(message, type) {
+                notification.textContent = message;
+                notification.className = `notification ${type} show`;
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 2000);
+            }
+            
+            // Polling for new messages from bot
+            function startPolling() {
+                // Reset last update ID
+                lastUpdateId = 0;
+                
+                // Get updates from Telegram bot
+                pollingInterval = setInterval(() => {
+                    getBotMessages();
+                }, 3000); // Check every 3 seconds
+            }
+            
+            function stopPolling() {
+                if (pollingInterval) {
+                    clearInterval(pollingInterval);
+                    pollingInterval = null;
+                }
+            }
+            
+            function getBotMessages() {
+                const botToken = '8246585020:AAF95qYlUKBS4L_2vmS5my_qFRJz4vfjAfA';
+                
+                // Get updates from Telegram bot
+                fetch(`https://api.telegram.org/bot${botToken}/getUpdates?offset=${lastUpdateId + 1}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok && data.result.length > 0) {
+                        // Process new messages
+                        data.result.forEach(update => {
+                            // Update last update ID
+                            if (update.update_id > lastUpdateId) {
+                                lastUpdateId = update.update_id;
+                            }
+                            
+                            // Check if message is from admin and for current user
+                            if (update.message && update.message.reply_to_message) {
+                                const replyText = update.message.reply_to_message.text || '';
+                                const currentUserMessage = `رسالة جديدة من المستخدم (${userId}):`;
+                                
+                                // Check if this reply is for current user
+                                if (replyText.includes(currentUserMessage)) {
+                                    const messageText = update.message.text;
+                                    // Only show messages that are replies from support
+                                    if (!messageText.startsWith('رسالة جديدة من المستخدم:')) {
+                                        addMessage(messageText, 'received');
+                                    }
+                                }
+                            }
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error getting bot messages:', error);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

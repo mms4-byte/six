@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الجدول الدراسي - Six Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+        .current-class {
+            border-right: 4px solid #3b82f6;
+            background-color: #f0f9ff;
+        }
+        .completed-class {
+            opacity: 0.7;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #1e3a8a 0%, #0ea5e9 100%);
+        }
+        .time-indicator {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background-color: #ef4444;
+            z-index: 10;
+        }
+        .time-indicator-dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #ef4444;
+            border-radius: 50%;
+            top: -5px;
+            right: -6px;
+        }
+        .time-marker {
+            position: absolute;
+            width: 4px;
+            height: 100%;
+            background-color: #94a3b8;
+            z-index: 5;
+        }
+        .time-label {
+            position: absolute;
+            font-size: 12px;
+            color: #64748b;
+            top: -20px;
+        }
+        .toggle-completed {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center">
+            <a href="index.html" class="text-blue-600">
+                <i data-feather="arrow-right" class="w-6 h-6"></i>
+            </a>
+            <h1 class="text-xl font-bold text-gray-800 mx-auto">الجدول الدراسي</h1>
+        </div>
+    </header>
+
+    <!-- Motivating Text -->
+    <section class="container mx-auto px-4 mt-6">
+        <div class="bg-white rounded-xl shadow-md p-6 text-center">
+            <h2 class="text-xl font-bold text-blue-600 mb-2">"الا اخلي Sixth عبره لكل واحد خايف منه"</h2>
+            <p class="text-gray-600">نظم وقتك وحقق النجاح</p>
+        </div>
+    </section>
+
+    <!-- Progress -->
+    <section class="container mx-auto px-4 mt-6">
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="font-medium text-gray-700">تقدم اليوم</h3>
+                <span id="progress-percent" class="font-bold text-blue-600">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Time Indicator -->
+    <section class="container mx-auto px-4 mt-6">
+        <div class="bg-white rounded-xl shadow-md p-4 relative overflow-hidden">
+            <div class="relative h-8">
+                <div id="time-indicator" class="time-indicator">
+                    <div class="time-indicator-dot"></div>
+                </div>
+                <!-- Time markers -->
+                <div class="time-marker" style="right: 0%;"></div>
+                <div class="time-label" style="right: 0%;">12 ص</div>
+                
+                <div class="time-marker" style="right: 8.33%;"></div>
+                <div class="time-label" style="right: 8.33%;">1 ص</div>
+                
+                <div class="time-marker" style="right: 16.66%;"></div>
+                <div class="time-label" style="right: 16.66%;">2 ص</div>
+                
+                <div class="time-marker" style="right: 25%;"></div>
+                <div class="time-label" style="right: 25%;">3 ص</div>
+                
+                <div class="time-marker" style="right: 33.33%;"></div>
+                <div class="time-label" style="right: 33.33%;">4 ص</div>
+                
+                <div class="time-marker" style="right: 41.66%;"></div>
+                <div class="time-label" style="right: 41.66%;">5 ص</div>
+                
+                <div class="time-marker" style="right: 50%;"></div>
+                <div class="time-label" style="right: 50%;">6 ص</div>
+                
+                <div class="time-marker" style="right: 58.33%;"></div>
+                <div class="time-label" style="right: 58.33%;">7 ص</div>
+                
+                <div class="time-marker" style="right: 66.66%;"></div>
+                <div class="time-label" style="right: 66.66%;">8 ص</div>
+                
+                <div class="time-marker" style="right: 75%;"></div>
+                <div class="time-label" style="right: 75%;">9 ص</div>
+                
+                <div class="time-marker" style="right: 83.33%;"></div>
+                <div class="time-label" style="right: 83.33%;">10 ص</div>
+                
+                <div class="time-marker" style="right: 91.66%;"></div>
+                <div class="time-label" style="right: 91.66%;">11 ص</div>
+                
+                <div class="time-marker" style="right: 100%;"></div>
+                <div class="time-label" style="right: 100%;">12 م</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Schedule Table -->
+    <section class="container mx-auto px-4 mt-6">
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+            <table class="w-full">
+                <thead class="bg-blue-50 text-blue-600">
+                    <tr>
+                        <th class="p-3 text-right">النشاط</th>
+                        <th class="p-3">من</th>
+                        <th class="p-3">إلى</th>
+                        <th class="p-3">الإنجاز</th>
+                    </tr>
+                </thead>
+                <tbody id="schedule-body" class="divide-y divide-gray-200">
+                    <!-- Schedule rows will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Time Remaining -->
+    <section class="container mx-auto px-4 mt-6">
+        <div class="bg-white rounded-xl shadow-md p-6 text-center">
+            <h3 class="font-medium text-gray-700 mb-1">الوقت المتبقي حتى نهاية اليوم</h3>
+            <p id="time-remaining" class="text-2xl font-bold text-blue-600">23:59:59</p>
+        </div>
+    </section>
+
+    <script>
+        feather.replace();
+
+        // الجدول الدراسي
+        const schedule = [
+            { subject: "رياضيات", start: "06:00", end: "07:00", completed: false },
+            { subject: "فيزياء", start: "07:00", end: "08:00", completed: false },
+            { subject: "إفطار + سباحة + راحة خفيفة", start: "08:00", end: "09:00", completed: false },
+            { subject: "كيمياء", start: "09:00", end: "10:00", completed: false },
+            { subject: "أحياء", start: "10:00", end: "11:00", completed: false },
+            { subject: "لغة عربية", start: "11:00", end: "12:00", completed: false },
+            { subject: "غداء + صلاة الظهر + راحة", start: "12:00", end: "14:00", completed: false },
+            { subject: "قيلولة خفيفة + راحة", start: "14:00", end: "15:00", completed: false },
+            { subject: "إنجليزي", start: "15:30", end: "16:30", completed: false },
+            { subject: "حل أسئلة / تمارين", start: "16:30", end: "17:30", completed: false },
+            { subject: "استعداد للعشاء + تنظيف", start: "17:30", end: "21:00", completed: false },
+            { subject: "حل أسئلة المرحلة المنتهية", start: "21:00", end: "22:00", completed: false },
+            { subject: "نوم مبكر", start: "22:00", end: "23:00", completed: false }
+        ];
+
+        // تحويل الوقت إلى نظام 12 ساعة
+        function convertTo12Hour(time) {
+            const [hours, minutes] = time.split(':').map(Number);
+            if (hours === 0) return `12:${minutes.toString().padStart(2, '0')} ص`;
+            if (hours < 12) return `${hours}:${minutes.toString().padStart(2, '0')} ص`;
+            if (hours === 12) return `12:${minutes.toString().padStart(2, '0')} م`;
+            return `${hours - 12}:${minutes.toString().padStart(2, '0')} م`;
+        }
+
+        // تحديث الجدول
+        function renderSchedule() {
+            const scheduleBody = document.getElementById('schedule-body');
+            scheduleBody.innerHTML = '';
+            
+            const now = new Date();
+            const currentTime = now.getHours() * 60 + now.getMinutes();
+            
+            schedule.forEach((item, index) => {
+                const [startHour, startMinute] = item.start.split(':').map(Number);
+                const [endHour, endMinute] = item.end.split(':').map(Number);
+                const startTime = startHour * 60 + startMinute;
+                const endTime = endHour * 60 + endMinute;
+                
+                let rowClass = '';
+                if (currentTime >= startTime && currentTime < endTime) {
+                    rowClass = 'current-class';
+                } else if (currentTime >= endTime) {
+                    rowClass = 'completed-class';
+                }
+                
+                const row = document.createElement('tr');
+                row.className = rowClass;
+                row.innerHTML = `
+                    <td class="p-3 font-medium">${item.subject}</td>
+                    <td class="p-3 text-gray-500">${convertTo12Hour(item.start)}</td>
+                    <td class="p-3 text-gray-500">${convertTo12Hour(item.end)}</td>
+                    <td class="p-3">
+                        <button class="toggle-completed text-${item.completed ? 'green' : 'gray'}-500" data-index="${index}">
+                            <i data-feather="${item.completed ? 'check-circle' : 'circle'}" class="w-5 h-5"></i>
+                        </button>
+                    </td>
+                `;
+                scheduleBody.appendChild(row);
+            });
+            
+            feather.replace();
+            
+            // إضافة مستمعي الأحداث لأزرار الإنجاز
+            document.querySelectorAll('.toggle-completed').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const index = e.currentTarget.dataset.index;
+                    schedule[index].completed = !schedule[index].completed;
+                    renderSchedule();
+                    updateProgress();
+                });
+            });
+        }
+
+        // تحديث شريط التقدم
+        function updateProgress() {
+            const totalTasks = schedule.length;
+            const completedTasks = schedule.filter(task => task.completed).length;
+            const progressPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+            
+            document.getElementById('progress-percent').textContent = `${progressPercent}%`;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+        }
+
+        // تحديث مؤشر الوقت
+        function updateTimeIndicator() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const totalMinutes = hours * 60 + minutes;
+            const percentage = (totalMinutes / (24 * 60)) * 100;
+            
+            document.getElementById('time-indicator').style.right = `${percentage}%`;
+            
+            // تحديث الوقت المتبقي
+            const secondsUntilEnd = (24 * 60 * 60) - (totalMinutes * 60 + now.getSeconds());
+            const hoursLeft = Math.floor(secondsUntilEnd / 3600);
+            const minutesLeft = Math.floor((secondsUntilEnd % 3600) / 60);
+            const secondsLeft = secondsUntilEnd % 60;
+            
+            document.getElementById('time-remaining').textContent = 
+                `${hoursLeft.toString().padStart(2, '0')}:${minutesLeft.toString().padStart(2, '0')}:${secondsLeft.toString().padStart(2, '0')}`;
+        }
+
+        // تحديث كل ثانية
+        setInterval(() => {
+            renderSchedule();
+            updateTimeIndicator();
+        }, 1000);
+
+        // تهيئة التطبيق
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSchedule();
+            updateTimeIndicator();
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

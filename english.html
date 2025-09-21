@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الإنكليزي - Six Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        @font-face {
+            font-family: 'Tajawal';
+            src: url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        }
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+        .verb-card {
+            transition: all 0.3s ease;
+            border-right: 4px solid #3b82f6;
+        }
+        .verb-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex items-center">
+            <a href="index.html" class="text-blue-600">
+                <i data-feather="arrow-right" class="w-6 h-6"></i>
+            </a>
+            <h1 class="text-xl font-bold text-gray-800 mx-auto">الإنكليزي</h1>
+        </div>
+    </header>
+
+    <!-- Daily Phrase -->
+    <section class="container mx-auto px-4 mt-6">
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl shadow-md p-6">
+            <h3 class="font-medium mb-1">العبارة اليومية</h3>
+            <p class="text-xl mb-2 font-medium">"Practice makes perfect"</p>
+            <p class="text-sm opacity-80">"الممارسة تؤدي إلى الإتقان"</p>
+        </div>
+    </section>
+
+    <!-- Main Buttons -->
+    <div class="container mx-auto px-4 mt-6 grid grid-cols-2 gap-4">
+        <a href="#irregular-verbs" class="bg-white rounded-xl shadow-md p-4 flex flex-col items-center text-center">
+            <i data-feather="zap" class="w-8 h-8 text-blue-600 mb-2"></i>
+            <h3 class="font-medium">الأفعال الشاذة</h3>
+        </a>
+        <a href="#vocabulary" class="bg-white rounded-xl shadow-md p-4 flex flex-col items-center text-center">
+            <i data-feather="book-open" class="w-8 h-8 text-blue-600 mb-2"></i>
+            <h3 class="font-medium">المفردات</h3>
+        </a>
+    </div>
+
+    <!-- Irregular Verbs Section -->
+    <section id="irregular-verbs" class="container mx-auto px-4 mt-8">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">الأفعال الشاذة</h2>
+        
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+            <div class="p-4 grid grid-cols-4 gap-2 text-center bg-blue-50 text-blue-600 font-medium">
+                <p>V1</p>
+                <p>V2</p>
+                <p>V3</p>
+                <p>المعنى</p>
+            </div>
+            
+            <div class="divide-y divide-gray-200">
+                <div class="p-4 grid grid-cols-4 gap-2 text-center">
+                    <p>Go</p>
+                    <p>Went</p>
+                    <p>Gone</p>
+                    <p>ذهب</p>
+                </div>
+                <div class="p-4 grid grid-cols-4 gap-2 text-center">
+                    <p>See</p>
+                    <p>Saw</p>
+                    <p>Seen</p>
+                    <p>رأى</p>
+                </div>
+                <div class="verb-card bg-white p-4 grid grid-cols-4 gap-2 text-center cursor-pointer">
+                    <p>Write</p>
+                    <p>Wrote</p>
+                    <p>Written</p>
+                    <p>كتب</p>
+                </div>
+                <div class="p-4 grid grid-cols-4 gap-2 text-center">
+                    <p>Take</p>
+                    <p>Took</p>
+                    <p>Taken</p>
+                    <p>أخذ</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vocabulary Section -->
+    <section id="vocabulary" class="container mx-auto px-4 mt-8">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">المفردات</h2>
+        
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+            <div class="p-4 grid grid-cols-2 gap-2 text-center bg-blue-50 text-blue-600 font-medium">
+                <p>الكلمة</p>
+                <p>المعنى</p>
+            </div>
+            
+            <div class="divide-y divide-gray-200">
+                <div class="p-4 grid grid-cols-2 gap-2 text-center">
+                    <p>Book</p>
+                    <p>كتاب</p>
+                </div>
+                <div class="p-4 grid grid-cols-2 gap-2 text-center">
+                    <p>School</p>
+                    <p>مدرسة</p>
+                </div>
+                <div class="p-4 grid grid-cols-2 gap-2 text-center">
+                    <p>Teacher</p>
+                    <p>معلم</p>
+                </div>
+                <div class="p-4 grid grid-cols-2 gap-2 text-center">
+                    <p>Student</p>
+                    <p>طالب</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        feather.replace();
+    </script>
+</body>
+</html>
