@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- إعدادات PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e40af">
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js');
+      }
+    </script>
+
+    <title>Six Pro - تطبيق الطالب المثالي</title>
+
+    <!-- مكتبات -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <style>
+        /* باقي التنسيقات */
+    </style>
+</head>
+        @font-face {
+            font-family: 'Tajawal';
+            src: url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        }
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+        .main-gradient {
+            background: linear-gradient(135deg, #1e3a8a 0%, #0ea5e9 100%);
+        }
+        .gold-text {
+            color: #d4af37;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .feature-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 2px solid transparent;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-color: #e5e7eb;
+        }
+        /* تحسين التصميم للأجهزة الصغيرة */
+        @media (max-width: 640px) {
+            .feature-card.col-span-2 {
+                grid-column: span 1 / span 1;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+            main {
+                padding: 1rem;
+            }
+        }
+        /* تحسين شاشة البداية */
+        #splash {
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Splash Screen -->
+    <div id="splash" class="fixed inset-0 z-50 flex items-center justify-center main-gradient">
+        <div class="text-center animate-pulse">
+            <h1 class="text-6xl font-bold text-white mb-4">6</h1>
+            <p class="text-2xl font-semibold gold-text">Six Pro</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="main-gradient text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <h1 class="text-3xl font-bold gold-text">Six Pro</h1>
+                </div>
+                <button id="profile-btn" class="p-2 rounded-full bg-blue-800 text-white shadow-md hover:bg-blue-700 transition-colors">
+                    <i data-feather="user"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="modal">
+        <div class="modal-content p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">معلومات التطبيق</h2>
+                <button id="close-profile" class="text-gray-500 hover:text-gray-700">
+                    <i data-feather="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div class="flex justify-between">
+                    <span class="font-medium text-gray-700">المطور:</span>
+                    <span>مروة محمد</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="font-medium text-gray-700">النسخة:</span>
+                    <span>1.9.9V</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="font-medium text-gray-700">تاريخ الإصدار:</span>
+                    <span>2025\9\21</span>
+                </div>
+                <div class="pt-4">
+                    <p class="text-gray-700">
+                        Six Pro هو تطبيق دراسي شامل لطلبة السادس العلمي، يجمع كل ما يحتاجه الطالب في مكان واحد، 
+                        بواجهة بسيطة وعصرية، مع وظائف عملية تعمل بالكامل.
+                    </p>
+                </div>
+                <a href="app-info.html" class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors text-center block mt-4">
+                    التفاصيل الكاملة
+                </a>
+                <a href="support.html" class="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition-colors text-center block mt-2">
+                    الدعم الفني
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Features Grid -->
+    <main class="container mx-auto px-4 py-8">
+        <h2 class="text-2xl font-bold mb-8 text-center text-gray-800">أهلاً بك في تطبيق Six Pro</h2>
+        
+        <div class="grid grid-cols-2 gap-6">
+            <!-- Tasks -->
+            <a href="tasks.html" class="feature-card bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center border border-gray-200" data-aos="fade-up" data-aos-delay="100">
+                <div class="bg-blue-100 p-4 rounded-full mb-4">
+                    <i data-feather="check-square" class="text-blue-600 w-8 h-8"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">المهام اليومية</h3>
+                <p class="text-gray-600 text-sm">نظم مهامك الدراسية اليومية</p>
+            </a>
+
+            <!-- Math -->
+            <a href="math.html" class="feature-card bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center border border-gray-200" data-aos="fade-up" data-aos-delay="200">
+                <div class="bg-yellow-100 p-4 rounded-full mb-4">
+                    <i data-feather="divide-square" class="text-yellow-600 w-8 h-8"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">الرياضيات</h3>
+                <p class="text-gray-600 text-sm">تعلم وتدرب على جداول الضرب</p>
+            </a>
+
+            <!-- English -->
+            <a href="english.html" class="feature-card bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center border border-gray-200" data-aos="fade-up" data-aos-delay="300">
+                <div class="bg-green-100 p-4 rounded-full mb-4">
+                    <i data-feather="book" class="text-green-600 w-8 h-8"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">الإنكليزي</h3>
+                <p class="text-gray-600 text-sm">تعلم الأفعال الشاذة والمفردات</p>
+            </a>
+
+            <!-- Laws -->
+            <a href="laws.html" class="feature-card bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center border border-gray-200" data-aos="fade-up" data-aos-delay="400">
+                <div class="bg-red-100 p-4 rounded-full mb-4">
+                    <i data-feather="file-text" class="text-red-600 w-8 h-8"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">القوانين الدراسية</h3>
+                <p class="text-gray-600 text-sm">احفظ جميع القوانين المهمة</p>
+            </a>
+
+            <!-- Schedule -->
+            <a href="schedule.html" class="feature-card bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center border border-gray-200 col-span-2" data-aos="fade-up" data-aos-delay="500">
+                <div class="bg-purple-100 p-4 rounded-full mb-4">
+                    <i data-feather="calendar" class="text-purple-600 w-8 h-8"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">تنظيم / الجدول الدراسي</h3>
+                <p class="text-gray-600 text-sm">الا اخلي السادس عبره لكل واحد خايف منه</p>
+            </a>
+        </div>
+    </main>
+
+    <!-- Motivational Quote -->
+    <section class="bg-blue-50 py-8 mt-10">
+        <div class="container mx-auto px-4 text-center" data-aos="fade-up">
+            <i data-feather="award" class="w-10 h-10 mx-auto text-blue-600 mb-4"></i>
+            <p class="text-lg text-gray-800 font-medium mb-2">"النجاح هو مجموع الجهود الصغيرة المتكررة يومياً"</p>
+            <p class="text-sm text-gray-600">روبرت كولير</p>
+        </div>
+    </section>
+
+    <script>
+        // إخفاء شاشة البداية مع انتقال سلس
+        function hideSplash() {
+            const splash = document.getElementById('splash');
+            if (splash) {
+                splash.style.opacity = '0';
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                }, 500);
+            }
+        }
+
+        // عند تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', function() {
+            // تحقق مما إذا كانت شاشة البداية قد ظهرت بالفعل
+            if (!sessionStorage.getItem('splashShown')) {
+                // تمكين تتبع ظهور شاشة البداية
+                sessionStorage.setItem('splashShown', 'true');
+                
+                // إخفاء شاشة البداية بعد 1 ثانية
+                setTimeout(hideSplash, 1000);
+            } else {
+                // إذا كانت قد ظهرت، اخفها فوراً
+                hideSplash();
+            }
+            
+            // تهيئة AOS و Feather Icons
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
+            feather.replace();
+            
+            // وظائف المودال
+            const profileBtn = document.getElementById('profile-btn');
+            const profileModal = document.getElementById('profile-modal');
+            const closeProfile = document.getElementById('close-profile');
+            
+            profileBtn.addEventListener('click', () => {
+                profileModal.style.display = 'flex';
+            });
+            
+            closeProfile.addEventListener('click', () => {
+                profileModal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', (e) => {
+                if (e.target === profileModal) {
+                    profileModal.style.display = 'none';
+                }
+            });
+        });
+
+        // عند العودة من صفحة أخرى (زر الرجوع)
+        window.addEventListener('pageshow', function(event) {
+            hideSplash();
+        });
+    </script>
+</body>
+</html>
