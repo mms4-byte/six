@@ -36,17 +36,23 @@
             cursor: pointer;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             border: 2px solid transparent;
+            transform: scale(0.95);
+            opacity: 0;
         }
         .dark .feature-card {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
             border-color: #374151;
         }
         .feature-card:hover {
-            transform: translateY(-5px);
+            transform: scale(1.02) translateY(-5px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
         .dark .feature-card:hover {
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+        }
+        .feature-card.loaded {
+            transform: scale(1);
+            opacity: 1;
         }
         @media (max-width: 640px) {
             .feature-card.col-span-2 {
@@ -81,9 +87,14 @@
                 padding: 1.5rem;
             }
         }
+        @media (max-width: 360px) {
+            .grid-cols-2 {
+                grid-template-columns: repeat(1, minmax(0, 1fr));
+            }
+        }
         #splash {
             opacity: 1;
-            transition: opacity 0.5s ease-out;
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
             position: fixed;
             top: 0;
             left: 0;
@@ -190,6 +201,8 @@
         }
         .bottom-nav i {
             margin-bottom: 0.25rem;
+            width: 24px;
+            height: 24px;
         }
         .dark body {
             background-color: #111827;
@@ -511,23 +524,23 @@
     <nav class="bottom-nav">
         <a href="index.html" class="active">
             <i data-feather="home"></i>
-            <span>الرئيسية</span>
+            <span class="font-medium">الرئيسية</span>
         </a>
         <a href="tasks.html">
             <i data-feather="check-square"></i>
-            <span>المهام</span>
+            <span class="font-medium">المهام</span>
         </a>
         <a href="math.html">
             <i data-feather="divide-square"></i>
-            <span>الرياضيات</span>
+            <span class="font-medium">الرياضيات</span>
         </a>
         <a href="english.html">
             <i data-feather="book"></i>
-            <span>الإنكليزي</span>
+            <span class="font-medium">الإنكليزي</span>
         </a>
         <a href="laws.html">
             <i data-feather="file-text"></i>
-            <span>القوانين</span>
+            <span class="font-medium">القوانين</span>
         </a>
     </nav>
 
@@ -536,6 +549,7 @@
             const splash = document.getElementById('splash');
             if (splash) {
                 splash.style.opacity = '0';
+                splash.style.transform = 'scale(0.8)';
                 setTimeout(() => {
                     splash.style.display = 'none';
                 }, 500);
@@ -587,7 +601,27 @@
                 easing: 'ease-in-out',
                 once: true
             });
+            
+            // إضافة تأثير تحميل الكروت
+            setTimeout(() => {
+                document.querySelectorAll('.feature-card').forEach(card => {
+                    card.classList.add('loaded');
+                });
+            }, 500);
+            
             feather.replace();
+            
+            // تعيين الصفحة النشطة في الشريط السفلي
+            const currentPage = window.location.pathname.split("/").pop();
+            if (currentPage === "") {
+                document.querySelector('.bottom-nav a[href="index.html"]').classList.add('active');
+            } else {
+                document.querySelectorAll('.bottom-nav a').forEach(link => {
+                    if (link.getAttribute('href') === currentPage) {
+                        link.classList.add('active');
+                    }
+                });
+            }
             
             const profileBtn = document.getElementById('profile-btn');
             const profileModal = document.getElementById('profile-modal');
