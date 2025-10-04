@@ -1,4 +1,3 @@
-```javascript
 const CACHE_NAME = 'six-pro-v1';
 const urlsToCache = [
   '/',
@@ -14,7 +13,7 @@ const urlsToCache = [
   'https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js',
   'https://unpkg.com/feather-icons',
   'https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap',
-  'https://imgur.com/1l3hICE.jpg'
+  'https://i.imgur.com/1l3hICE.jpg'
 ];
 
 self.addEventListener('install', event => {
@@ -30,4 +29,3 @@ self.addEventListener('fetch', event => {
       .then(response => response || fetch(event.request))
   );
 });
-```
