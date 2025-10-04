@@ -43,6 +43,25 @@
             background-size: cover;
             background-position: bottom;
         }
+
+        /* زر تثبيت التطبيق */
+        #installBtn {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background-color: #fff;
+            color: #667eea;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 50;
+        }
+        #installBtn:hover {
+            background-color: #e0e7ff;
+        }
     </style>
 </head>
 <body class="gradient-bg min-h-screen overflow-x-hidden">
@@ -63,6 +82,7 @@
             </button>
         </div>
     </header>
+
 <!-- Main Content -->
     <main class="relative z-10 max-w-6xl mx-auto px-6 py-8">
         <!-- Welcome Section -->
@@ -170,11 +190,15 @@
             </div>
         </div>
     </nav>
+
+    <!-- زر التثبيت -->
+    <button id="installBtn">📱 تثبيت التطبيق</button>
+
     <script>
         // Initialize Feather Icons
         feather.replace();
 
-        // Add animation on scroll
+        // Scroll Animation
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -196,14 +220,36 @@
             observer.observe(card);
         });
 
-        // Register Service Worker for PWA
+        // Register Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/service-worker.js')
-                .then(reg => console.log('Service Worker registered'))
-                .catch(err => console.log('Service Worker registration failed'));
+                .then(reg => console.log('✅ Service Worker Registered'))
+                .catch(err => console.log('❌ Registration Failed:', err));
         }
 
-        // Request notification permission
+        // Manual Install Button
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            installBtn.style.display = 'none';
+            deferredPrompt.prompt();
+            const choice = await deferredPrompt.userChoice;
+            if (choice.outcome === 'accepted') {
+                console.log('✅ تم تثبيت التطبيق');
+            } else {
+                console.log('❌ تم إلغاء التثبيت');
+            }
+            deferredPrompt = null;
+        });
+
+        // Notifications
         if ('Notification' in window && Notification.permission === 'default') {
             Notification.requestPermission();
         }
