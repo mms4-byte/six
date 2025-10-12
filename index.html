@@ -1,60 +1,61 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<style>
-  /* يمنع تحديد النص */
-  * {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent; /* يمنع وميض التحديد عند اللمس */
-  }
-
-  /* يجعل التمرير سلس وثابت */
-  html, body {
-    overscroll-behavior: none;
-    touch-action: manipulation;
-  }
-</style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Six Pro - البداية</title>
-    <link rel="icon" type="image/x-icon" href="image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#667eea">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Six Pro">
-    <script src="https://cdn.tailwindcss.com  "></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js  "></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap');
-        body { 
-            font-family: 'Tajawal', sans-serif; 
+        
+        /* تحسينات الأداء والواجهة */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box; /* مهم للتصميم المتجاوب */
+        }
+        html, body {
+            overscroll-behavior: none;
+            touch-action: manipulation;
             margin: 0;
             padding: 0;
-            overflow: hidden; /* منع التمرير لمنع التداخل مع فقاعات الخلفية */
-            transition: background 1.5s ease; /* انتقال لون الخلفية */
+            overflow: hidden;
+            font-family: 'Tajawal', sans-serif;
+            transition: background 1.5s ease;
+            height: 100vh; /* لجعل العرض يملأ الشاشة */
         }
         .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px); /* دعم لـ Safari */
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* انتقال أكثر سلاسة */
         }
         .hover-lift {
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         .hover-lift:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
         }
         .gradient-bg {
             background: linear-gradient(-45deg, #667eea, #764ba2, #6B8DD6, #8E37D7);
             background-size: 400% 400%;
-            animation: gradientShift 12s ease infinite;
+            animation: gradientShift 15s ease infinite;
+            height: 100vh; /* لجعل الخلفية تملأ الشاشة */
+            position: relative; /* لجعل العناصر الأخرى مثبتة بشكل مناسب */
         }
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
@@ -62,32 +63,40 @@
             100% { background-position: 0% 50%; }
         }
         .wave-bg {
-            background-image: url("image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.1' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.1' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
             background-size: cover;
             background-position: bottom;
         }
-
-        /* زر تثبيت التطبيق */
+        /* زر التثبيت */
         #installBtn {
             position: fixed;
-            bottom: 90px;
+            bottom: 140px; 
             right: 20px;
-            background-color: #fff;
-            color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             border: none;
-            padding: 12px 18px;
-            border-radius: 10px;
+            padding: 14px 22px;
+            border-radius: 14px; /* أكثر نعومة */
             font-weight: 600;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            font-size: 0.95rem;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4), 0 4px 15px rgba(0,0,0,0.2);
             display: none;
             z-index: 50;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         #installBtn:hover {
-            background-color: #e0e7ff;
-            transform: scale(1.05);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5), 0 6px 18px rgba(0,0,0,0.25);
         }
-
+        #installBtn:active {
+            transform: translateY(1px) scale(0.98);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3), 0 2px 10px rgba(0,0,0,0.15);
+        }
         /* فقاعات الخلفية */
         .bubbles-container {
             position: fixed;
@@ -96,172 +105,175 @@
             width: 100%;
             height: 100%;
             z-index: 0;
-            pointer-events: none; /* لجعل الفقاعات لا تمنع التفاعل مع العناصر الأخرى */
+            pointer-events: none;
         }
-
         .bubble {
             position: absolute;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            bottom: -100px; /* تبدأ من تحت الشاشة */
+            bottom: -100px;
             animation: rise linear infinite;
-            /* استخدام @property لتمكين الانتقالات السلسة للون */
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: rgba(255, 255, 255, 0.18);
         }
-
         @property --bubble-color {
             syntax: '<color>';
             inherits: true;
-            initial-value: rgba(255, 255, 255, 0.15);
+            initial-value: rgba(255, 255, 255, 0.18);
         }
-
         .bubble {
             background-color: var(--bubble-color);
         }
-
         @keyframes rise {
             to {
-                transform: translateY(-100vh) rotate(360deg); /* تتحرك لأعلى وتتقلب */
+                transform: translateY(-100vh) rotate(360deg);
             }
         }
-
         /* تحسينات إضافية */
         .controls-panel {
             position: fixed;
             right: 20px;
             bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 10px;
-            z-index: 60;
+            z-index: 60; 
+        }
+        /* تحسين محتوى الصفحة */
+        .page-content {
+            padding: 1.25rem; /* تقليل الحشوة */
+            max-width: 100%;
+        }
+        .welcome-section {
+            margin-bottom: 1.5rem; /* تقليل الهامش */
+        }
+        .features-grid {
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* أكثر مرونة */
+            gap: 1rem; /* تقليل الفجوة */
+            margin-bottom: 1.5rem;
+        }
+        .feature-card {
+            min-height: 140px; /* تقليل الارتفاع الأدنى */
+        }
+        .bottom-nav {
+            padding: 0.75rem 1rem; /* تقليل الحشوة */
+        }
+        .nav-item {
+            font-size: 0.75rem; /* تقليل حجم الخط */
+        }
+        .nav-icon {
+            width: 1.25rem; /* تقليل حجم الأيقونة */
+            height: 1.25rem;
+        }
+        .card-icon {
+            width: 2.5rem; /* تقليل حجم الأيقونة */
+            height: 2.5rem;
         }
     </style>
 </head>
-<body class="gradient-bg min-h-screen overflow-x-hidden">
+<body class="gradient-bg">
     <!-- Header -->
-    <header class="relative z-10 p-6">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-3 space-x-reverse">
-                <div class="w-16 h-16 rounded-full overflow-hidden shadow-lg">
-                    <img src="  https://imgur.com/1l3hICE.jpg  " alt="Logo" class="w-full h-full object-cover">
+    <header class="relative z-10 p-4">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-2 space-x-reverse">
+                <div class="w-12 h-12 rounded-full overflow-hidden shadow-lg">
+                    <img src="https://imgur.com/1l3hICE.jpg" alt="Logo" class="w-full h-full object-cover">
                 </div>
                 <div>
-                    <h1 class="text-2xl font-bold text-white">Six Pro</h1>
-                    <p class="text-purple-200 text-sm">النجاح من البداية</p>
+                    <h1 class="text-xl font-bold text-white">Six Pro</h1>
+                    <p class="text-purple-200 text-xs">النجاح من البداية</p>
                 </div>
             </div>
-            <button class="glass-card rounded-full p-3 hover-lift">
-                <i data-feather="settings" class="w-5 h-5 text-white"></i>
+            <button class="glass-card rounded-full p-2 hover-lift">
+                <i data-feather="settings" class="w-4 h-4 text-white"></i>
             </button>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="relative z-10 max-w-6xl mx-auto px-6 py-8">
-        <!-- Welcome Section -->
-        <div class="text-center mb-12">
-            <h2 class="text-4xl font-bold text-white mb-4">أهلاً بك في Six Pro</h2>
-            <p class="text-xl text-purple-100">منصتك الشاملة للنجاح في الصف السادس العلمي</p>
+    <main class="relative z-10 page-content">
+        <div class="text-center welcome-section">
+            <h2 class="text-2xl font-bold text-white mb-2">أهلاً بك في Six Pro</h2>
+            <p class="text-lg text-purple-100">منصتك الشاملة للنجاح في الصف السادس العلمي</p>
         </div>
 
-        <!-- Features Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            <!-- Daily Tasks -->
-            <a href="tasks.html" class="glass-card rounded-2xl p-6 hover-lift group">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-14 h-14 bg-gradient-to-br from-pink-400 to-pink-600 rounded-2xl flex items-center justify-center">
-                        <i data-feather="check-circle" class="w-7 h-7 text-white"></i>
+        <div class="grid features-grid">
+            <a href="tasks.html" class="glass-card rounded-2xl p-4 hover-lift group feature-card">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="w-10 h-10 bg-gradient-to-br from-pink-400 to-pink-600 rounded-xl flex items-center justify-center">
+                        <i data-feather="check-circle" class="w-5 h-5 text-white card-icon"></i>
                     </div>
-                    <i data-feather="arrow-left" class="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    <i data-feather="arrow-left" class="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
                 </div>
-                <h3 class="text-xl font-bold text-white mb-2">المهام اليومية</h3>
-                <p class="text-purple-100 text-sm">نظم مهامك الدراسية وتابع تقدمك اليومي</p>
+                <h3 class="text-lg font-bold text-white mb-1">المهام</h3>
+                <p class="text-purple-100 text-xs">نظم مهامك الدراسية</p>
             </a>
-
-            <!-- Mathematics -->
-            <a href="math.html" class="glass-card rounded-2xl p-6 hover-lift group">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center">
-                        <i data-feather="calculator" class="w-7 h-7 text-white"></i>
+            <a href="math.html" class="glass-card rounded-2xl p-4 hover-lift group feature-card">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center">
+                        <i data-feather="calculator" class="w-5 h-5 text-white card-icon"></i>
                     </div>
-                    <i data-feather="arrow-left" class="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    <i data-feather="arrow-left" class="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
                 </div>
-                <h3 class="text-xl font-bold text-white mb-2">الرياضيات</h3>
-                <p class="text-purple-100 text-sm">تعلم وتدرب على جداول الضرب والعمليات الحسابية</p>
+                <h3 class="text-lg font-bold text-white mb-1">الرياضيات</h3>
+                <p class="text-purple-100 text-xs">تعلم وتدرب</p>
             </a>
-
-            <!-- English -->
-            <a href="english.html" class="glass-card rounded-2xl p-6 hover-lift group">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-14 h-14 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center">
-                        <i data-feather="book-open" class="w-7 h-7 text-white"></i>
+            <a href="english.html" class="glass-card rounded-2xl p-4 hover-lift group feature-card">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center">
+                        <i data-feather="book-open" class="w-5 h-5 text-white card-icon"></i>
                     </div>
-                    <i data-feather="arrow-left" class="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    <i data-feather="arrow-left" class="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
                 </div>
-                <h3 class="text-xl font-bold text-white mb-2">الإنكليزي</h3>
-                <p class="text-purple-100 text-sm">تعلم الأفعال الشاذة والمفردات الجديدة</p>
+                <h3 class="text-lg font-bold text-white mb-1">الإنكليزي</h3>
+                <p class="text-purple-100 text-xs">تعلم الأفعال والمفردات</p>
             </a>
-
-            <!-- Schedule -->
-            <a href="schedule.html" class="glass-card rounded-2xl p-6 hover-lift group">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-14 h-14 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center">
-                        <i data-feather="calendar" class="w-7 h-7 text-white"></i>
+            <a href="schedule.html" class="glass-card rounded-2xl p-4 hover-lift group feature-card">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
+                        <i data-feather="calendar" class="w-5 h-5 text-white card-icon"></i>
                     </div>
-                    <i data-feather="arrow-left" class="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    <i data-feather="arrow-left" class="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
                 </div>
-                <h3 class="text-xl font-bold text-white mb-2">الجدول الدراسي</h3>
-                <p class="text-purple-100 text-sm">نظم وقتك وخلّي السادس العلمي بداية نجاحك</p>
+                <h3 class="text-lg font-bold text-white mb-1">الجدول</h3>
+                <p class="text-purple-100 text-xs">نظم وقتك</p>
             </a>
-
-            <!-- Statistics -->
-            <a href="stats.html" class="glass-card rounded-2xl p-6 hover-lift group">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-14 h-14 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center">
-                        <i data-feather="trending-up" class="w-7 h-7 text-white"></i>
+            <a href="stats.html" class="glass-card rounded-2xl p-4 hover-lift group feature-card">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center">
+                        <i data-feather="trending-up" class="w-5 h-5 text-white card-icon"></i>
                     </div>
-                    <i data-feather="arrow-left" class="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    <i data-feather="arrow-left" class="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
                 </div>
-                <h3 class="text-xl font-bold text-white mb-2">الإحصائيات</h3>
-                <p class="text-purple-100 text-sm">تابع تقدمك وتحسنك في جميع المواد</p>
+                <h3 class="text-lg font-bold text-white mb-1">الإحصائيات</h3>
+                <p class="text-purple-100 text-xs">تابع تقدمك</p>
             </a>
-
-            <!-- Profile -->
-            <a href="profile.html" class="glass-card rounded-2xl p-6 hover-lift group">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-14 h-14 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-2xl flex items-center justify-center">
-                        <i data-feather="user" class="w-7 h-7 text-white"></i>
+            <a href="profile.html" class="glass-card rounded-2xl p-4 hover-lift group feature-card">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-xl flex items-center justify-center">
+                        <i data-feather="user" class="w-5 h-5 text-white card-icon"></i>
                     </div>
-                    <i data-feather="arrow-left" class="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                    <i data-feather="arrow-left" class="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i>
                 </div>
-                <h3 class="text-xl font-bold text-white mb-2">الاعدادات</h3>
-                <p class="text-purple-100 text-sm">إدارة حسابك ومعلوماتك الشخصية</p>
+                <h3 class="text-lg font-bold text-white mb-1">الاعدادات</h3>
+                <p class="text-purple-100 text-xs">إدارة الحساب</p>
             </a>
         </div>
     </main>
 
-    <!-- Bottom Navigation -->
-    <nav class="fixed bottom-0 left-0 right-0 z-20 glass-card rounded-t-3xl">
-        <div class="max-w-6xl mx-auto px-6 py-4">
-            <div class="flex justify-around items-center">
-                <a href="index.html" class="flex flex-col items-center space-y-1 text-white">
-                    <i data-feather="home" class="w-6 h-6"></i>
-                    <span class="text-xs">الرئيسية</span>
-                </a>
-                <a href="tasks.html" class="flex flex-col items-center space-y-1 text-purple-200">
-                    <i data-feather="check-square" class="w-6 h-6"></i>
-                    <span class="text-xs">المهام</span>
-                </a>
-                <a href="stats.html" class="flex flex-col items-center space-y-1 text-purple-200">
-                    <i data-feather="bar-chart-2" class="w-6 h-6"></i>
-                    <span class="text-xs">الإحصائيات</span>
-                </a>
-                <a href="profile.html" class="flex flex-col items-center space-y-1 text-purple-200">
-                    <i data-feather="user" class="w-6 h-6"></i>
-                    <span class="text-xs">الاعدادات</span>
-                </a>
-            </div>
+    <nav class="fixed bottom-0 left-0 right-0 z-20 glass-card rounded-t-3xl bottom-nav">
+        <div class="flex justify-around items-center">
+            <a href="index.html" class="flex flex-col items-center space-y-0.5 nav-item">
+                <i data-feather="home" class="w-5 h-5 nav-icon"></i>
+                <span class="text-xs">الرئيسية</span>
+            </a>
+            <a href="tasks.html" class="flex flex-col items-center space-y-0.5 nav-item">
+                <i data-feather="check-square" class="w-5 h-5 nav-icon"></i>
+                <span class="text-xs">المهام</span>
+            </a>
+            <a href="stats.html" class="flex flex-col items-center space-y-0.5 nav-item">
+                <i data-feather="bar-chart-2" class="w-5 h-5 nav-icon"></i>
+                <span class="text-xs">الإحصائيات</span>
+            </a>
+            <a href="profile.html" class="flex flex-col items-center space-y-0.5 nav-item">
+                <i data-feather="user" class="w-5 h-5 nav-icon"></i>
+                <span class="text-xs">الاعدادات</span>
+            </a>
         </div>
     </nav>
 
@@ -270,59 +282,44 @@
 
     <!-- لوحة التحكم (زر التثبيت فقط) -->
     <div class="controls-panel">
-        <!-- زر التثبيت -->
         <button id="installBtn">📱 تثبيت</button>
     </div>
 
     <!-- العنصر الصوتي -->
-    <audio id="startup-sound" src="https://filebin.net/72aamvumbtkf0rvq/ssstik.io_1760283505780.mp3.mp4  " preload="auto"></audio>
+    <audio id="startup-sound" src="https://filebin.net/72aamvumbtkf0rvq/ssstik.io_1760283505780.mp3.mp4" preload="auto"></audio>
 
     <script>
-        // Initialize Feather Icons
+        // تهيئة Feather Icons
         feather.replace();
 
-        // Scroll Animation
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.glass-card').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'all 0.6s ease';
-            observer.observe(card);
-        });
-
-        // Register Service Worker
+        // تسجيل Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('service-worker.js')
-                .then(reg => console.log('✅ Service Worker Registered'))
-                .catch(err => console.log('❌ Registration Failed:', err));
+                .then(reg => console.log('✅ Service Worker مسجل'))
+                .catch(err => console.log('❌ فشل التسجيل:', err));
         }
 
-        // Manual Install Button
+        // وظيفة زر التثبيت
         let deferredPrompt;
         const installBtn = document.getElementById('installBtn');
 
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            if (deferredPrompt) {
-                installBtn.style.display = 'block';
-            }
+            installBtn.style.display = 'block';
         });
 
         installBtn.addEventListener('click', async () => {
+            // محاولة تشغيل الصوت عند تفاعل المستخدم (النقر على الزر)
+            const sound = document.getElementById('startup-sound');
+            sound.play()
+                .then(() => {
+                    console.log('✅ تم تشغيل الصوت عند التفاعل.');
+                })
+                .catch(err => {
+                    console.log('⚠️ لا يمكن تشغيل الصوت عند التفاعل:', err.message);
+                });
+
             if (deferredPrompt) {
                 installBtn.style.display = 'none';
                 deferredPrompt.prompt();
@@ -336,37 +333,14 @@
             }
         });
 
-        // Notifications
+        // طلب إذن الإشعارات
         if ('Notification' in window && Notification.permission === 'default') {
             Notification.requestPermission();
         }
 
-        // --- تحسين وظيفة تشغيل الصوت ---
-        window.addEventListener('load', () => {
-            const sound = document.getElementById('startup-sound');
-            const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-
-            if (isPWA) {
-                // محاولة تشغيل الصوت فورًا
-                sound.play()
-                    .then(() => {
-                        console.log('✅ تم تشغيل الصوت بنجاح.');
-                    })
-                    .catch((err) => {
-                        console.log('⚠️ لا يمكن تشغيل الصوت تلقائيًا:', err.message);
-                        // مثال: يمكنك عرض زر للمستخدم لتشغيل الصوت يدويًا إذا رغب في ذلك
-                        // لا يتم تشغيل الصوت تلقائيًا إذا لم يكن PWA أو حدث خطأ
-                    });
-            } else {
-                 console.log('ℹ️ تم فتح التطبيق في المتصفح، لا يتم تشغيل الصوت تلقائيًا.');
-            }
-        });
-
-        // --- إضافة فقاعات الخلفية ---
+        // إنشاء فقاعات الخلفية
         const bubblesContainer = document.getElementById('bubblesContainer');
-        const bubbleCount = 25; // عدد الفقاعات
-
-        // مكتبة الألوان المخصصة
+        const bubbleCount = 20; // تقليل العدد قليلاً للشاشة الصغيرة
         const customColors = [
             { start: '#667eea', end: '#764ba2' },
             { start: '#f093fb', end: '#f5576c' },
@@ -390,38 +364,27 @@
                 const bubble = document.createElement('div');
                 bubble.classList.add('bubble');
 
-                // حجم عشوائي
-                const size = Math.random() * 60 + 20; // بين 20px و 80px
+                const size = Math.random() * 40 + 15; // تقليل الحجم الأقصى
                 bubble.style.width = `${size}px`;
                 bubble.style.height = `${size}px`;
-
-                // موضع عشوائي في العرض
                 bubble.style.left = `${Math.random() * 100}%`;
 
-                // مدة الرحلة العشوائية
-                const duration = Math.random() * 10 + 5; // بين 5 و 15 ثانية
+                const duration = Math.random() * 12 + 6; // تغيير مدة الحركة
                 bubble.style.animationDuration = `${duration}s`;
-
-                // تأخير عشوائي لبدء الحركة
-                const delay = Math.random() * 5; // حتى 5 ثواني
+                const delay = Math.random() * 5;
                 bubble.style.animationDelay = `${delay}s`;
 
-                // لون عشوائي من المكتبة
                 const colorSet = customColors[Math.floor(Math.random() * customColors.length)];
                 const isStartColor = Math.random() > 0.5;
                 const bubbleColor = isStartColor ? colorSet.start : colorSet.end;
                 bubble.style.setProperty('--bubble-color', bubbleColor);
 
-                // شفافية عشوائية إضافية
-                bubble.style.opacity = (Math.random() * 0.1 + 0.05).toFixed(2);
-
+                bubble.style.opacity = (Math.random() * 0.1 + 0.08).toFixed(2);
                 bubblesContainer.appendChild(bubble);
             }
         }
 
-        // إنشاء الفقاعات عند تحميل الصفحة
         createBubbles();
-
     </script>
 </body>
 </html>
