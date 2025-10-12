@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
   /* يمنع تحديد النص */
   * {
@@ -19,19 +17,28 @@
     touch-action: manipulation;
   }
 </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Six Pro - البداية</title>
-    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+    <link rel="icon" type="image/x-icon" href="image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#667eea">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Six Pro">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://cdn.tailwindcss.com  "></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js  "></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap');
-        body { font-family: 'Tajawal', sans-serif; }
+        body { 
+            font-family: 'Tajawal', sans-serif; 
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* منع التمرير لمنع التداخل مع فقاعات الخلفية */
+            transition: background 1.5s ease; /* انتقال لون الخلفية */
+        }
         .glass-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -55,7 +62,7 @@
             100% { background-position: 0% 50%; }
         }
         .wave-bg {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.1' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-image: url("image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.1' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
             background-size: cover;
             background-position: bottom;
         }
@@ -74,9 +81,60 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             display: none;
             z-index: 50;
+            transition: all 0.3s ease;
         }
         #installBtn:hover {
             background-color: #e0e7ff;
+            transform: scale(1.05);
+        }
+
+        /* فقاعات الخلفية */
+        .bubbles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none; /* لجعل الفقاعات لا تمنع التفاعل مع العناصر الأخرى */
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            bottom: -100px; /* تبدأ من تحت الشاشة */
+            animation: rise linear infinite;
+            /* استخدام @property لتمكين الانتقالات السلسة للون */
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        @property --bubble-color {
+            syntax: '<color>';
+            inherits: true;
+            initial-value: rgba(255, 255, 255, 0.15);
+        }
+
+        .bubble {
+            background-color: var(--bubble-color);
+        }
+
+        @keyframes rise {
+            to {
+                transform: translateY(-100vh) rotate(360deg); /* تتحرك لأعلى وتتقلب */
+            }
+        }
+
+        /* تحسينات إضافية */
+        .controls-panel {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+            z-index: 60;
         }
     </style>
 </head>
@@ -86,7 +144,7 @@
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3 space-x-reverse">
                 <div class="w-16 h-16 rounded-full overflow-hidden shadow-lg">
-                    <img src="https://imgur.com/1l3hICE.jpg" alt="Logo" class="w-full h-full object-cover">
+                    <img src="  https://imgur.com/1l3hICE.jpg  " alt="Logo" class="w-full h-full object-cover">
                 </div>
                 <div>
                     <h1 class="text-2xl font-bold text-white">Six Pro</h1>
@@ -207,8 +265,17 @@
         </div>
     </nav>
 
-    <!-- زر التثبيت -->
-    <button id="installBtn">📱 تثبيت التطبيق</button>
+    <!-- حاوية فقاعات الخلفية -->
+    <div class="bubbles-container" id="bubblesContainer"></div>
+
+    <!-- لوحة التحكم (زر التثبيت فقط) -->
+    <div class="controls-panel">
+        <!-- زر التثبيت -->
+        <button id="installBtn">📱 تثبيت</button>
+    </div>
+
+    <!-- العنصر الصوتي -->
+    <audio id="startup-sound" src="https://filebin.net/72aamvumbtkf0rvq/ssstik.io_1760283505780.mp3.mp4  " preload="auto"></audio>
 
     <script>
         // Initialize Feather Icons
@@ -273,6 +340,88 @@
         if ('Notification' in window && Notification.permission === 'default') {
             Notification.requestPermission();
         }
+
+        // --- تحسين وظيفة تشغيل الصوت ---
+        window.addEventListener('load', () => {
+            const sound = document.getElementById('startup-sound');
+            const isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+            if (isPWA) {
+                // محاولة تشغيل الصوت فورًا
+                sound.play()
+                    .then(() => {
+                        console.log('✅ تم تشغيل الصوت بنجاح.');
+                    })
+                    .catch((err) => {
+                        console.log('⚠️ لا يمكن تشغيل الصوت تلقائيًا:', err.message);
+                        // مثال: يمكنك عرض زر للمستخدم لتشغيل الصوت يدويًا إذا رغب في ذلك
+                        // لا يتم تشغيل الصوت تلقائيًا إذا لم يكن PWA أو حدث خطأ
+                    });
+            } else {
+                 console.log('ℹ️ تم فتح التطبيق في المتصفح، لا يتم تشغيل الصوت تلقائيًا.');
+            }
+        });
+
+        // --- إضافة فقاعات الخلفية ---
+        const bubblesContainer = document.getElementById('bubblesContainer');
+        const bubbleCount = 25; // عدد الفقاعات
+
+        // مكتبة الألوان المخصصة
+        const customColors = [
+            { start: '#667eea', end: '#764ba2' },
+            { start: '#f093fb', end: '#f5576c' },
+            { start: '#4facfe', end: '#00f2fe' },
+            { start: '#43e97b', end: '#38f9d7' },
+            { start: '#fa709a', end: '#fee140' },
+            { start: '#a8edea', end: '#fed6e3' },
+            { start: '#ff9a9e', end: '#fecfef' },
+            { start: '#fbc2eb', end: '#a6c1ee' },
+            { start: '#84fab0', end: '#8fd3f4' },
+            { start: '#d4fc79', end: '#96e6a1' },
+            { start: '#a1c4fd', end: '#c2e9fb' },
+            { start: '#f093fb', end: '#f5576c' },
+            { start: '#5ee7df', end: '#b490ca' },
+            { start: '#d299c2', end: '#fef9d7' },
+            { start: '#f8ceec', end: '#a1c4fd' }
+        ];
+
+        function createBubbles() {
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+
+                // حجم عشوائي
+                const size = Math.random() * 60 + 20; // بين 20px و 80px
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+
+                // موضع عشوائي في العرض
+                bubble.style.left = `${Math.random() * 100}%`;
+
+                // مدة الرحلة العشوائية
+                const duration = Math.random() * 10 + 5; // بين 5 و 15 ثانية
+                bubble.style.animationDuration = `${duration}s`;
+
+                // تأخير عشوائي لبدء الحركة
+                const delay = Math.random() * 5; // حتى 5 ثواني
+                bubble.style.animationDelay = `${delay}s`;
+
+                // لون عشوائي من المكتبة
+                const colorSet = customColors[Math.floor(Math.random() * customColors.length)];
+                const isStartColor = Math.random() > 0.5;
+                const bubbleColor = isStartColor ? colorSet.start : colorSet.end;
+                bubble.style.setProperty('--bubble-color', bubbleColor);
+
+                // شفافية عشوائية إضافية
+                bubble.style.opacity = (Math.random() * 0.1 + 0.05).toFixed(2);
+
+                bubblesContainer.appendChild(bubble);
+            }
+        }
+
+        // إنشاء الفقاعات عند تحميل الصفحة
+        createBubbles();
+
     </script>
 </body>
 </html>
