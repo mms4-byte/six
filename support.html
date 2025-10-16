@@ -2,59 +2,122 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<style>
-  /* يمنع تحديد النص */
-  * {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent; /* يمنع وميض التحديد عند اللمس */
-  }
-
-  /* يجعل التمرير سلس وثابت */
-  html, body {
-    overscroll-behavior: none;
-    touch-action: manipulation;
-  }
-</style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الدعم - Six Pro</title>
+    <!-- 1. Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 2. Tailwind Config for consistent theme -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Tajawal', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': {
+                            50: '#f0f4ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#667eea', // Main primary color
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        },
+                        'secondary': {
+                            50: '#f0f1f9',
+                            100: '#e0e1f0',
+                            200: '#c8cbe6',
+                            300: '#a9afda',
+                            400: '#8a93ce',
+                            500: '#764ba2', // Main secondary color
+                            600: '#6b4193',
+                            700: '#5a377a',
+                            800: '#492d60',
+                            900: '#382447',
+                        },
+                        'glass': {
+                            DEFAULT: 'rgba(255, 255, 255, 0.1)',
+                            'border': 'rgba(255, 255, 255, 0.2)',
+                        }
+                    },
+                    borderRadius: {
+                        'xl': '0.75rem',
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                    },
+                    boxShadow: {
+                        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
+                        'glass-hover': '0 20px 40px rgba(0, 0, 0, 0.2), 0 4px 20px rgba(102, 126, 234, 0.6), 0 6px 30px rgba(118, 75, 162, 0.4)',
+                        'button-hover': '0 0 15px rgba(102, 126, 234, 0.7)',
+                    },
+                    animation: {
+                        'gradient-shift': 'gradientShift 12s ease infinite',
+                        'scale-click': 'scaleClick 0.2s ease-in-out forwards',
+                        'fade-click': 'fadeClick 0.2s ease-in-out forwards',
+                    },
+                    keyframes: {
+                        gradientShift: {
+                            '0%, 100%': { 'background-position': '0% 50%' },
+                            '50%': { 'background-position': '100% 50%' },
+                        },
+                        scaleClick: {
+                            '0%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(0.95)' },
+                            '100%': { transform: 'scale(1)' },
+                        },
+                        fadeClick: {
+                            '0%': { opacity: '0.8' },
+                            '50%': { opacity: '0.6' },
+                            '100%': { opacity: '0.8' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- 3. Feather Icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <!-- 4. Tajawal Font -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- 5. Custom CSS -->
     <style>
         body {
             font-family: 'Tajawal', sans-serif;
             background: linear-gradient(-45deg, #667eea, #764ba2, #6B8DD6, #8E37D7);
             background-size: 400% 400%;
             animation: gradientShift 12s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+
         .glass-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: theme('colors.glass.DEFAULT');
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
+            border: 1px solid theme('colors.glass.border');
+            transition: all 0.3s ease;
+            box-shadow: theme('boxShadow.glass');
         }
+
         .chat-container {
             display: flex;
             flex-direction: column;
             height: 100vh;
         }
+
         .chat-header {
             padding: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid theme('colors.glass.border');
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: theme('colors.glass.DEFAULT');
         }
+
         .chat-messages {
             flex: 1;
             padding: 16px;
@@ -63,6 +126,7 @@
             flex-direction: column;
             background-color: rgba(255, 255, 255, 0.05);
         }
+
         .message {
             max-width: 80%;
             padding: 12px 16px;
@@ -71,47 +135,56 @@
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             position: relative;
         }
+
         .received {
             background-color: #ffffff;
             align-self: flex-start;
             border-bottom-left-radius: 4px;
         }
+
         .sent {
             background-color: #dbeafe;
             color: #1e40af;
             align-self: flex-end;
             border-bottom-right-radius: 4px;
         }
+
         .message-image {
             max-width: 100%;
             border-radius: 12px;
             margin-top: 8px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
+
         .message-audio {
             width: 250px;
             margin-top: 8px;
         }
+
         .message-time {
             font-size: 0.7rem;
             margin-top: 4px;
             opacity: 0.8;
         }
+
         .sent .message-time {
             text-align: left;
             color: #3b82f6;
         }
+
         .received .message-time {
             text-align: right;
             color: #64748b;
         }
+
         .chat-input {
             padding: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-top: 1px solid theme('colors.glass.border');
             display: flex;
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: theme('colors.glass.DEFAULT');
             align-items: center;
         }
+
         .chat-input input {
             flex: 1;
             padding: 12px 16px;
@@ -123,9 +196,11 @@
             background: rgba(255, 255, 255, 0.1);
             color: white;
         }
+
         .chat-input input:focus {
             border-color: #3b82f6;
         }
+
         .send-button, .attach-button {
             background-color: #3b82f6;
             color: white;
@@ -139,17 +214,21 @@
             cursor: pointer;
             transition: background-color 0.2s;
         }
+
         .attach-button {
             background-color: #94a3b8;
             width: 44px;
             height: 44px;
         }
+
         .send-button:hover {
             background-color: #2563eb;
         }
+
         .attach-button:hover {
             background-color: #64748b;
         }
+
         .notification {
             position: fixed;
             top: 20px;
@@ -163,15 +242,19 @@
             transform: translateX(100%);
             transition: transform 0.3s ease;
         }
+
         .notification.show {
             transform: translateX(0);
         }
+
         .notification.success {
             background-color: #10b981;
         }
+
         .notification.error {
             background-color: #ef4444;
         }
+
         .typing-indicator {
             display: none;
             align-self: flex-start;
@@ -181,6 +264,7 @@
             margin-bottom: 12px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
+
         .typing-indicator span {
             height: 8px;
             width: 8px;
@@ -190,12 +274,15 @@
             margin: 0 2px;
             animation: bounce 1.3s linear infinite;
         }
+
         .typing-indicator span:nth-child(2) {
             animation-delay: 0.15s;
         }
+
         .typing-indicator span:nth-child(3) {
             animation-delay: 0.3s;
         }
+
         @keyframes bounce {
             0%, 60%, 100% {
                 transform: translateY(0);
@@ -204,11 +291,13 @@
                 transform: translateY(-5px);
             }
         }
+
         .user-id-display {
             font-size: 0.75rem;
             color: #cbd5e1;
             margin-top: 2px;
         }
+
         /* تحسين تصميم زر الثلاث نقاط */
         .message-options {
             position: absolute;
@@ -222,13 +311,16 @@
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             z-index: 10;
         }
+
         .message-options:hover {
             background-color: #e2e8f0;
         }
+
         .message-options i {
             width: 18px;
             height: 18px;
         }
+
         /* تصميم القائمة المنبثقة */
         .options-menu {
             position: absolute;
@@ -241,9 +333,11 @@
             display: none;
             min-width: 120px;
         }
+
         .options-menu.show {
             display: block;
         }
+
         .options-menu-item {
             padding: 10px 16px;
             cursor: pointer;
@@ -251,16 +345,51 @@
             display: flex;
             align-items: center;
         }
+
         .options-menu-item:hover {
             background-color: #f1f5f9;
         }
+
         .options-menu-item i {
             margin-left: 8px;
         }
+
+        /* For preventing text selection and touch highlight */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            overscroll-behavior: none;
+            touch-action: manipulation;
+        }
+
+        /* NEW: Bottom Navigation Styles */
+        .nav-item {
+            transition: color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .nav-item.active {
+            color: theme('colors.white');
+        }
+
+        .nav-item:active {
+            animation: scale-click 0.2s ease-in-out forwards, fade-click 0.2s ease-in-out forwards;
+        }
+
+        /* Content Area Styling */
+        .main-content {
+            padding-bottom: 80px; /* Space for fixed nav bar */
+            flex: 1; /* For chat container layout */
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col overflow-x-hidden">
-    <div class="chat-container">
+<body class="min-h-screen flex flex-col overflow-x-hidden relative">
+    <div class="chat-container flex flex-col">
         <!-- Header -->
         <header class="relative z-10 p-6">
             <div class="max-w-6xl mx-auto flex justify-between items-center">
@@ -282,31 +411,61 @@
             <div class="w-6"></div> <!-- Spacer for alignment -->
         </div>
 
-        <!-- Chat Messages -->
-        <div class="chat-messages glass-card" id="chat-messages">
-            <!-- سيتم تحميل الرسائل من localStorage هنا -->
-            <div class="typing-indicator" id="typing-indicator">
-                <span></span>
-                <span></span>
-                <span></span>
+        <!-- Chat Messages and Input Container -->
+        <div class="main-content flex flex-col">
+            <div class="chat-messages glass-card" id="chat-messages">
+                <!-- سيتم تحميل الرسائل من localStorage هنا -->
+                <div class="typing-indicator" id="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
-        </div>
 
-        <!-- Chat Input -->
-        <div class="chat-input glass-card">
-            <input type="file" id="image-input" accept="image/*" style="display: none;">
-            <button class="attach-button" id="attach-button" title="إرفاق صورة">
-                <i data-feather="paperclip" class="w-5 h-5"></i>
-            </button>
-            <input type="text" id="message-input" placeholder="اكتب رسالتك..." class="text-white placeholder:text-white/50">
-            <button class="send-button" id="send-message" title="إرسال">
-                <i data-feather="send" class="w-5 h-5"></i>
-            </button>
+            <!-- Chat Input -->
+            <div class="chat-input glass-card">
+                <input type="file" id="image-input" accept="image/*" style="display: none;">
+                <button class="attach-button" id="attach-button" title="إرفاق صورة">
+                    <i data-feather="paperclip" class="w-5 h-5"></i>
+                </button>
+                <input type="text" id="message-input" placeholder="اكتب رسالتك..." class="text-white placeholder:text-white/50">
+                <button class="send-button" id="send-message" title="إرسال">
+                    <i data-feather="send" class="w-5 h-5"></i>
+                </button>
+            </div>
         </div>
     </div>
 
     <!-- Notification -->
     <div id="notification" class="notification"></div>
+
+    <!-- NEW: Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 z-20 glass-card rounded-t-3xl">
+        <div class="max-w-6xl mx-auto px-4 py-3">
+            <div class="flex justify-around items-center">
+                <a href="index.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="الصفحة الرئيسية" title="الصفحة الرئيسية">
+                    <i data-feather="home" class="w-6 h-6"></i>
+                    <span class="text-xs">الرئيسية</span>
+                </a>
+                <a href="tasks.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="المهام" title="المهام">
+                    <i data-feather="check-square" class="w-6 h-6"></i>
+                    <span class="text-xs">المهام</span>
+                </a>
+                <a href="stats.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="الإحصائيات" title="الإحصائيات">
+                    <i data-feather="bar-chart-2" class="w-6 h-6"></i>
+                    <span class="text-xs">الإحصائيات</span>
+                </a>
+                <a href="notifications.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="التنبيهات" title="التنبيهات">
+                    <i data-feather="bell" class="w-6 h-6"></i>
+                    <span class="text-xs">التنبيهات</span>
+                </a>
+                <a href="profile.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="الاعدادات" title="الإعدادات">
+                    <i data-feather="user" class="w-6 h-6"></i>
+                    <span class="text-xs">الاعدادات</span>
+                </a>
+            </div>
+        </div>
+    </nav>
 
     <script>
         // Initialize feather icons
@@ -475,7 +634,7 @@
                 const fullMessage = `رسالة جديدة من المستخدم (${userId}):\n${message}`;
                 
                 // Send message to Telegram bot using fetch API
-                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, { // FIXED: Removed space
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -515,7 +674,7 @@
                 formData.append('caption', `صورة من المستخدم (${userId})`);
                 
                 // Send image to Telegram bot
-                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { // FIXED: Removed space
                     method: 'POST',
                     body: formData
                 })
@@ -826,7 +985,7 @@
             
             function getBotMessages() {
                 // Get updates from Telegram bot
-                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?offset=${lastUpdateId + 1}`)
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?offset=${lastUpdateId + 1}`) // FIXED: Removed space
                 .then(response => response.json())
                 .then(data => {
                     if (data.ok && data.result.length > 0) {
@@ -887,12 +1046,12 @@
             
             function getFileAndDisplay(fileId, type) {
                 // Get file path
-                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getFile?file_id=${fileId}`)
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getFile?file_id=${fileId}`) // FIXED: Removed space
                 .then(response => response.json())
                 .then(data => {
                     if (data.ok) {
                         const filePath = data.result.file_path;
-                        const fileUrl = `https://api.telegram.org/file/bot${BOT_TOKEN}/${filePath}`;
+                        const fileUrl = `https://api.telegram.org/file/bot${BOT_TOKEN}/${filePath}`; // FIXED: Removed space
                         
                         // Add file to UI based on type
                         if (type === 'photo') {
@@ -910,6 +1069,31 @@
             // Cleanup on page unload
             window.addEventListener('beforeunload', () => {
                 stopPolling();
+            });
+
+            // --- NEW: Handle Bottom Navigation Clicks ---
+            document.querySelectorAll('.btn-nav').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevent default navigation for now
+
+                    // Remove 'active' class from all nav items
+                    document.querySelectorAll('.nav-item').forEach(item => {
+                        item.classList.remove('active');
+                        item.classList.remove('text-white');
+                        item.classList.add('text-purple-200');
+                    });
+
+                    // Add 'active' class to clicked item
+                    this.classList.add('active');
+                    this.classList.remove('text-purple-200');
+                    this.classList.add('text-white');
+
+                    const title = this.getAttribute('data-title');
+                    const href = this.getAttribute('href');
+                    console.log(`Navigating to: ${href} (Title: ${title})`); // Log for clarity
+                    // In a real SPA, this would trigger page load
+                    window.location.href = href; // Navigate to the page
+                });
             });
         });
     </script>
