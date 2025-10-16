@@ -329,23 +329,24 @@
     <nav class="fixed bottom-0 left-0 right-0 z-20 glass-card rounded-t-3xl">
         <div class="max-w-6xl mx-auto px-4 py-3">
             <div class="flex justify-around items-center">
-                <a href="#" class="nav-item flex flex-col items-center space-y-1 text-white button-hover-glow btn-nav active" data-section="home" data-title="الصفحة الرئيسية" title="الصفحة الرئيسية">
+                <!-- Updated href to point to actual pages -->
+                <a href="index.html" class="nav-item flex flex-col items-center space-y-1 text-white button-hover-glow btn-nav active" data-section="home" data-title="الصفحة الرئيسية" title="الصفحة الرئيسية">
                     <i data-feather="home" class="w-6 h-6"></i>
                     <span class="text-xs">الرئيسية</span>
                 </a>
-                <a href="#" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-section="tasks" data-title="المهام" title="المهام">
+                <a href="tasks.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-section="tasks" data-title="المهام" title="المهام">
                     <i data-feather="check-square" class="w-6 h-6"></i>
                     <span class="text-xs">المهام</span>
                 </a>
-                <a href="#" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-section="stats" data-title="الإحصائيات" title="الإحصائيات">
+                <a href="stats.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-section="stats" data-title="الإحصائيات" title="الإحصائيات">
                     <i data-feather="bar-chart-2" class="w-6 h-6"></i>
                     <span class="text-xs">الإحصائيات</span>
                 </a>
-                <a href="#" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-section="notifications" data-title="التنبيهات" title="التنبيهات">
+                <a href="notifications.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-section="notifications" data-title="التنبيهات" title="التنبيهات">
                     <i data-feather="bell" class="w-6 h-6"></i>
                     <span class="text-xs">التنبيهات</span>
                 </a>
-                <a href="#" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-section="profile" data-title="الاعدادات" title="الإعدادات">
+                <a href="profile.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-section="profile" data-title="الاعدادات" title="الإعدادات">
                     <i data-feather="user" class="w-6 h-6"></i>
                     <span class="text-xs">الاعدادات</span>
                 </a>
@@ -415,11 +416,26 @@
             // Initialize Bubbles
             initializeBubbles();
 
-            // --- NEW: Handle Bottom Navigation Clicks (Second Phase) ---
-            document.querySelectorAll('.btn-nav').forEach(button => {
-                button.addEventListener('click', function(event) {
-                    event.preventDefault(); // Prevent default navigation for now
+            // --- NEW: Update Active Navigation Item Based on Current Page ---
+            function updateActiveNavItem() {
+                // Get the current page name from the URL
+                const currentPage = window.location.pathname.split('/').pop().toLowerCase();
 
+                // Define a mapping between page names and nav items
+                const pageToNavItem = {
+                    'index.html': 'home',
+                    'tasks.html': 'tasks',
+                    'stats.html': 'stats',
+                    'notifications.html': 'notifications',
+                    'profile.html': 'profile',
+                    'math.html': 'math',
+                    'english.html': 'english',
+                    'schedule.html': 'schedule',
+                };
+
+                const sectionName = pageToNavItem[currentPage];
+
+                if (sectionName) {
                     // Remove 'active' class from all nav items
                     document.querySelectorAll('.nav-item').forEach(item => {
                         item.classList.remove('active');
@@ -427,16 +443,31 @@
                         item.classList.add('text-purple-200');
                     });
 
-                    // Add 'active' class to clicked item
-                    this.classList.add('active');
-                    this.classList.remove('text-purple-200');
-                    this.classList.add('text-white');
+                    // Find the nav item corresponding to the current page and add 'active' class
+                    const activeItem = document.querySelector(`.btn-nav[data-section="${sectionName}"]`);
+                    if (activeItem) {
+                        activeItem.classList.add('active');
+                        activeItem.classList.remove('text-purple-200');
+                        activeItem.classList.add('text-white');
+                    }
+                }
+            }
 
-                    const sectionId = this.getAttribute('data-section');
+            // Call the function on page load
+            updateActiveNavItem();
+
+            // --- NEW: Handle Bottom Navigation Clicks (Second Phase) ---
+            // Note: We don't prevent default navigation here, allowing the link to follow its href.
+            // The updateActiveNavItem function will run again on the destination page.
+            document.querySelectorAll('.btn-nav').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    // Allow default navigation to occur (page will reload)
+                    // event.preventDefault(); // Keep this commented out to allow navigation
+
                     const title = this.getAttribute('data-title');
-                    console.log(`Navigating to section: ${sectionId} (Title: ${title})`); // Log for clarity
-                    // Here, you would typically load the new content for the SPA (Third Phase)
-                    // Example: loadSection(sectionId);
+                    const href = this.getAttribute('href');
+                    console.log(`Navigating to: ${href} (Title: ${title})`); // Log for clarity
+                    // The page will naturally reload and updateActiveNavItem() will run again on the new page
                 });
             });
 
@@ -472,15 +503,16 @@
             });
 
             // --- NEW: Add click listeners to main content buttons (Preparation for Third Phase) ---
+            // Note: We don't prevent default navigation here, allowing the link to follow its href.
             document.querySelectorAll('.btn-link').forEach(button => {
                 button.addEventListener('click', function(event) {
-                    event.preventDefault();
+                    // Allow default navigation to occur (page will reload)
+                    // event.preventDefault(); // Keep this commented out to allow navigation
 
                     const title = this.getAttribute('data-title');
                     const href = this.getAttribute('data-href');
-                    console.log(`Clicked on main content button: ${title}, intended destination: ${href}`);
-                    // In a SPA, this would trigger loading the content of 'href' into the main area
-                    // Example: loadSectionFromHref(href);
+                    console.log(`Clicked on main content button: ${title}, intended destination: ${href}`); // Log for clarity
+                    // The page will naturally reload
                 });
             });
 
