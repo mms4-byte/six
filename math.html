@@ -2,109 +2,213 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<style>
-  /* يمنع تحديد النص */
-  * {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent; /* يمنع وميض التحديد عند اللمس */
-  }
-
-  /* يجعل التمرير سلس وثابت */
-  html, body {
-    overscroll-behavior: none;
-    touch-action: manipulation;
-  }
-</style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الرياضيات - Six Pro</title>
+    <!-- 1. Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 2. Tailwind Config for consistent theme -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Tajawal', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': {
+                            50: '#f0f4ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#667eea', // Main primary color
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        },
+                        'secondary': {
+                            50: '#f0f1f9',
+                            100: '#e0e1f0',
+                            200: '#c8cbe6',
+                            300: '#a9afda',
+                            400: '#8a93ce',
+                            500: '#764ba2', // Main secondary color
+                            600: '#6b4193',
+                            700: '#5a377a',
+                            800: '#492d60',
+                            900: '#382447',
+                        },
+                        'glass': {
+                            DEFAULT: 'rgba(255, 255, 255, 0.1)',
+                            'border': 'rgba(255, 255, 255, 0.2)',
+                        }
+                    },
+                    borderRadius: {
+                        'xl': '0.75rem',
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                    },
+                    boxShadow: {
+                        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
+                        'glass-hover': '0 20px 40px rgba(0, 0, 0, 0.2), 0 4px 20px rgba(102, 126, 234, 0.6), 0 6px 30px rgba(118, 75, 162, 0.4)',
+                        'button-hover': '0 0 15px rgba(102, 126, 234, 0.7)',
+                    },
+                    animation: {
+                        'gradient-shift': 'gradientShift 12s ease infinite',
+                        'scale-click': 'scaleClick 0.2s ease-in-out forwards',
+                        'fade-click': 'fadeClick 0.2s ease-in-out forwards',
+                        'fade-in': 'fadeIn 0.3s ease'
+                    },
+                    keyframes: {
+                        gradientShift: {
+                            '0%, 100%': { 'background-position': '0% 50%' },
+                            '50%': { 'background-position': '100% 50%' },
+                        },
+                        scaleClick: {
+                            '0%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(0.95)' },
+                            '100%': { transform: 'scale(1)' },
+                        },
+                        fadeClick: {
+                            '0%': { opacity: '0.8' },
+                            '50%': { opacity: '0.6' },
+                            '100%': { opacity: '0.8' },
+                        },
+                        fadeIn: {
+                            'from': { opacity: 0, transform: 'translateY(10px)' },
+                            'to': { opacity: 1, transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- 3. Feather Icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <!-- 4. Tajawal Font -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- 5. Custom CSS -->
     <style>
         body {
             font-family: 'Tajawal', sans-serif;
             background: linear-gradient(-45deg, #667eea, #764ba2, #6B8DD6, #8E37D7);
             background-size: 400% 400%;
             animation: gradientShift 12s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+
         .glass-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: theme('colors.glass.DEFAULT');
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
+            border: 1px solid theme('colors.glass.border');
+            transition: all 0.3s ease;
+            box-shadow: theme('boxShadow.glass');
         }
+
         .tab-active {
-            border-bottom: 3px solid #e0e7ff;
-            color: #e0e7ff;
+            border-bottom: 3px solid theme('colors.primary.100');
+            color: theme('colors.primary.100');
             font-weight: 600;
         }
+
         .table-card {
             transition: all 0.3s ease;
             cursor: pointer;
         }
+
         .table-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: theme('boxShadow.glass-hover');
         }
+
         .feedback-message {
-            animation: fadeIn 0.3s ease;
+            animation: fade-in 0.3s ease;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+
         .stats-card {
             transition: all 0.3s ease;
         }
+
         .stats-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: theme('boxShadow.glass-hover');
         }
+
         .multiplication-table {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
         }
+
         @media (max-width: 1024px) {
             .multiplication-table {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+
         @media (max-width: 640px) {
             .multiplication-table {
                 grid-template-columns: 1fr;
             }
         }
+
         .circular-progress {
             width: 120px;
             height: 120px;
             border-radius: 50%;
             background: 
                 radial-gradient(circle at center, white 60%, transparent 61%),
-                conic-gradient(#667eea 0%, #3b82f6 0);
+                conic-gradient(theme('colors.primary.500') 0%, theme('colors.primary.500') 0);
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
         .circular-progress::before {
             content: attr(data-progress) "%";
             font-size: 1.5rem;
             font-weight: bold;
-            color: #667eea;
+            color: theme('colors.primary.500');
+        }
+
+        /* For preventing text selection and touch highlight */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            overscroll-behavior: none;
+            touch-action: manipulation;
+        }
+
+        /* NEW: Bottom Navigation Styles */
+        .nav-item {
+            transition: color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .nav-item.active {
+            color: theme('colors.white');
+        }
+
+        .nav-item:active {
+            animation: scale-click 0.2s ease-in-out forwards, fade-click 0.2s ease-in-out forwards;
+        }
+
+        /* Content Area Styling */
+        .main-content {
+            padding-bottom: 80px; /* Space for fixed nav bar */
         }
     </style>
 </head>
-<body class="min-h-screen overflow-x-hidden">
+<body class="min-h-screen overflow-x-hidden relative">
     <!-- Header -->
     <header class="relative z-10 p-6">
         <div class="max-w-6xl mx-auto flex items-center">
@@ -115,82 +219,113 @@
         </div>
     </header>
 
-    <!-- Tabs -->
-    <div class="flex border-b border-white/20 container mx-auto px-4 mt-4 max-w-6xl relative z-10">
-        <button id="tables-tab" class="px-4 py-2 text-white tab-active">الجداول</button>
-        <button id="stats-tab" class="px-4 py-2 text-purple-200">الإحصائيات</button>
-        <button id="test-tab" class="px-4 py-2 text-purple-200">الاختبار</button>
-    </div>
-
-    <!-- Tables Content -->
-    <div id="tables-content" class="container mx-auto px-4 py-6 max-w-6xl relative z-10">
-        <div class="glass-card rounded-xl p-6">
-            <h3 class="font-bold text-white mb-4 text-center">جداول الضرب</h3>
-            <div class="multiplication-table">
-                <!-- Tables will be generated here -->
-            </div>
+    <!-- Main Content Area -->
+    <main class="main-content relative z-10 max-w-6xl mx-auto px-4 py-6">
+        <!-- Tabs -->
+        <div class="flex border-b border-white/20 mb-4">
+            <button id="tables-tab" class="px-4 py-2 text-white tab-active">الجداول</button>
+            <button id="stats-tab" class="px-4 py-2 text-purple-200">الإحصائيات</button>
+            <button id="test-tab" class="px-4 py-2 text-purple-200">الاختبار</button>
         </div>
-    </div>
 
-    <!-- Stats Content -->
-    <div id="stats-content" class="container mx-auto px-4 py-6 max-w-6xl relative z-10 hidden">
-        <div class="glass-card rounded-xl p-6">
-            <h3 class="font-bold text-white mb-6 text-center">إحصائياتك</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="stats-card bg-white/10 p-6 rounded-lg">
-                    <h4 class="font-bold text-white mb-4">الأسئلة</h4>
-                    <div class="space-y-3">
-                        <div class="flex justify-between text-white">
-                            <span>إجمالي الأسئلة:</span>
-                            <span id="total-questions" class="font-bold">0</span>
-                        </div>
-                        <div class="flex justify-between text-white">
-                            <span>الإجابات الصحيحة:</span>
-                            <span id="correct-answers" class="font-bold text-green-300">0</span>
-                        </div>
-                        <div class="flex justify-between text-white">
-                            <span>الإجابات الخاطئة:</span>
-                            <span id="incorrect-answers" class="font-bold text-red-300">0</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="stats-card bg-white/10 p-6 rounded-lg">
-                    <h4 class="font-bold text-white mb-4">نسبة النجاح</h4>
-                    <div class="flex flex-col items-center">
-                        <div class="circular-progress mb-4" data-progress="0"></div>
-                        <p id="success-advice" class="text-center text-purple-200 text-sm">
-                            ابدأ بالإجابة على بعض الأسئلة لترى إحصائياتك
-                        </p>
-                    </div>
-                </div>
-                
-                <div class="stats-card bg-white/10 p-6 rounded-lg md:col-span-2">
-                    <h4 class="font-bold text-white mb-2">أكثر الأسئلة خطأً</h4>
-                    <div id="common-mistakes" class="text-center text-purple-200">
-                        لا توجد بيانات حتى الآن
-                    </div>
+        <!-- Tables Content -->
+        <div id="tables-content" class="container mx-auto px-4 py-6">
+            <div class="glass-card rounded-xl p-6">
+                <h3 class="font-bold text-white mb-4 text-center">جداول الضرب</h3>
+                <div class="multiplication-table">
+                    <!-- Tables will be generated here -->
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Test Content -->
-    <div id="test-content" class="container mx-auto px-4 py-6 max-w-6xl relative z-10 hidden">
-        <div class="glass-card rounded-xl p-6">
-            <div class="text-center py-8">
-                <h2 id="test-question" class="text-4xl md:text-5xl font-bold text-white mb-8">1 × 1 = ؟</h2>
-                <input type="number" id="test-answer" class="border border-white/30 rounded-lg px-4 py-3 mb-4 w-32 text-center text-xl focus:outline-none focus:ring-2 focus:ring-white/50 bg-white/20 text-white placeholder:text-white/50" placeholder="الجواب" autocomplete="off">
-                <button id="submit-test-answer" class="bg-white text-indigo-600 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors">تحقق</button>
-                <div id="test-feedback-container" class="mt-4 min-h-[32px]">
-                    <p id="test-feedback" class="feedback-message font-bold hidden"></p>
-                </div>
-                <div class="mt-8 text-sm text-purple-200">
-                    <p>السؤال: <span id="question-number">1</span></p>
+        <!-- Stats Content -->
+        <div id="stats-content" class="container mx-auto px-4 py-6 hidden">
+            <div class="glass-card rounded-xl p-6">
+                <h3 class="font-bold text-white mb-6 text-center">إحصائياتك</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="stats-card bg-white/10 p-6 rounded-lg">
+                        <h4 class="font-bold text-white mb-4">الأسئلة</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between text-white">
+                                <span>إجمالي الأسئلة:</span>
+                                <span id="total-questions" class="font-bold">0</span>
+                            </div>
+                            <div class="flex justify-between text-white">
+                                <span>الإجابات الصحيحة:</span>
+                                <span id="correct-answers" class="font-bold text-green-300">0</span>
+                            </div>
+                            <div class="flex justify-between text-white">
+                                <span>الإجابات الخاطئة:</span>
+                                <span id="incorrect-answers" class="font-bold text-red-300">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card bg-white/10 p-6 rounded-lg">
+                        <h4 class="font-bold text-white mb-4">نسبة النجاح</h4>
+                        <div class="flex flex-col items-center">
+                            <div class="circular-progress mb-4" data-progress="0"></div>
+                            <p id="success-advice" class="text-center text-purple-200 text-sm">
+                                ابدأ بالإجابة على بعض الأسئلة لترى إحصائياتك
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card bg-white/10 p-6 rounded-lg md:col-span-2">
+                        <h4 class="font-bold text-white mb-2">أكثر الأسئلة خطأً</h4>
+                        <div id="common-mistakes" class="text-center text-purple-200">
+                            لا توجد بيانات حتى الآن
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+
+        <!-- Test Content -->
+        <div id="test-content" class="container mx-auto px-4 py-6 hidden">
+            <div class="glass-card rounded-xl p-6">
+                <div class="text-center py-8">
+                    <h2 id="test-question" class="text-4xl md:text-5xl font-bold text-white mb-8">1 × 1 = ؟</h2>
+                    <input type="number" id="test-answer" class="border border-white/30 rounded-lg px-4 py-3 mb-4 w-32 text-center text-xl focus:outline-none focus:ring-2 focus:ring-white/50 bg-white/20 text-white placeholder:text-white/50" placeholder="الجواب" autocomplete="off">
+                    <button id="submit-test-answer" class="bg-white text-indigo-600 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors">تحقق</button>
+                    <div id="test-feedback-container" class="mt-4 min-h-[32px]">
+                        <p id="test-feedback" class="feedback-message font-bold hidden"></p>
+                    </div>
+                    <div class="mt-8 text-sm text-purple-200">
+                        <p>السؤال: <span id="question-number">1</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- NEW: Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 z-20 glass-card rounded-t-3xl">
+        <div class="max-w-6xl mx-auto px-4 py-3">
+            <div class="flex justify-around items-center">
+                <a href="index.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="الصفحة الرئيسية" title="الصفحة الرئيسية">
+                    <i data-feather="home" class="w-6 h-6"></i>
+                    <span class="text-xs">الرئيسية</span>
+                </a>
+                <a href="tasks.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="المهام" title="المهام">
+                    <i data-feather="check-square" class="w-6 h-6"></i>
+                    <span class="text-xs">المهام</span>
+                </a>
+                <a href="math.html" class="nav-item flex flex-col items-center space-y-1 text-white button-hover-glow btn-nav active" data-title="الرياضيات" title="الرياضيات">
+                    <i data-feather="calculator" class="w-6 h-6"></i>
+                    <span class="text-xs">الرياضيات</span>
+                </a>
+                <a href="notifications.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="التنبيهات" title="التنبيهات">
+                    <i data-feather="bell" class="w-6 h-6"></i>
+                    <span class="text-xs">التنبيهات</span>
+                </a>
+                <a href="profile.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="الاعدادات" title="الإعدادات">
+                    <i data-feather="user" class="w-6 h-6"></i>
+                    <span class="text-xs">الاعدادات</span>
+                </a>
+            </div>
+        </div>
+    </nav>
 
     <script>
         // Initialize feather icons
@@ -221,6 +356,31 @@
         const questionNumber = document.getElementById('question-number');
         const circularProgress = document.querySelector('.circular-progress');
         const successAdvice = document.getElementById('success-advice');
+        
+        // --- NEW: Handle Bottom Navigation Clicks (Second Phase) ---
+        document.querySelectorAll('.btn-nav').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default navigation for now
+
+                // Remove 'active' class from all nav items
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                    item.classList.remove('text-white');
+                    item.classList.add('text-purple-200');
+                });
+
+                // Add 'active' class to clicked item
+                this.classList.add('active');
+                this.classList.remove('text-purple-200');
+                this.classList.add('text-white');
+
+                const title = this.getAttribute('data-title');
+                const href = this.getAttribute('href');
+                console.log(`Navigating to: ${href} (Title: ${title})`); // Log for clarity
+                // In a real SPA, this would trigger page load
+                window.location.href = href; // Navigate to the page
+            });
+        });
         
         // Tab switching
         tablesTab.addEventListener('click', () => {
@@ -259,7 +419,7 @@
             
             for (let tableNum = 1; tableNum <= 11; tableNum++) {
                 const tableContainer = document.createElement('div');
-                tableContainer.className = 'glass-card rounded-lg p-4';
+                tableContainer.className = 'glass-card rounded-lg p-4 table-card'; // Added table-card class
                 
                 const tableTitle = document.createElement('h4');
                 tableTitle.className = 'font-bold text-center mb-2 text-white';
@@ -378,7 +538,7 @@
                 Math.round((stats.correctAnswers / stats.totalQuestions) * 100) : 0;
             circularProgress.setAttribute('data-progress', successRate);
             circularProgress.style.background = 
-                `radial-gradient(circle at center, rgba(255,255,255,0.9) 60%, transparent 61%), conic-gradient(#667eea 0% ${successRate}%, #4b5563 ${successRate}% 100%)`;
+                `radial-gradient(circle at center, rgba(255,255,255,0.9) 60%, transparent 61%), conic-gradient(theme('colors.primary.500') 0% ${successRate}%, #4b5563 ${successRate}% 100%)`;
             
             // Update advice
             if (stats.totalQuestions === 0) {
