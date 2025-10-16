@@ -4,49 +4,132 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>المهام اليومية - Six Pro</title>
+    <!-- 1. Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 2. Tailwind Config for consistent theme -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Tajawal', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': {
+                            50: '#f0f4ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#667eea', // Main primary color
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        },
+                        'secondary': {
+                            50: '#f0f1f9',
+                            100: '#e0e1f0',
+                            200: '#c8cbe6',
+                            300: '#a9afda',
+                            400: '#8a93ce',
+                            500: '#764ba2', // Main secondary color
+                            600: '#6b4193',
+                            700: '#5a377a',
+                            800: '#492d60',
+                            900: '#382447',
+                        },
+                        'glass': {
+                            DEFAULT: 'rgba(255, 255, 255, 0.1)',
+                            'border': 'rgba(255, 255, 255, 0.2)',
+                        }
+                    },
+                    borderRadius: {
+                        'xl': '0.75rem',
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                    },
+                    boxShadow: {
+                        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
+                        'glass-hover': '0 20px 40px rgba(0, 0, 0, 0.2), 0 4px 20px rgba(102, 126, 234, 0.6), 0 6px 30px rgba(118, 75, 162, 0.4)',
+                        'button-hover': '0 0 15px rgba(102, 126, 234, 0.7)',
+                    },
+                    animation: {
+                        'gradient-shift': 'gradientShift 12s ease infinite',
+                        'scale-click': 'scaleClick 0.2s ease-in-out forwards',
+                        'fade-click': 'fadeClick 0.2s ease-in-out forwards',
+                    },
+                    keyframes: {
+                        gradientShift: {
+                            '0%, 100%': { 'background-position': '0% 50%' },
+                            '50%': { 'background-position': '100% 50%' },
+                        },
+                        scaleClick: {
+                            '0%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(0.95)' },
+                            '100%': { transform: 'scale(1)' },
+                        },
+                        fadeClick: {
+                            '0%': { opacity: '0.8' },
+                            '50%': { opacity: '0.6' },
+                            '100%': { opacity: '0.8' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- 3. Feather Icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <!-- 4. Tajawal Font -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- 5. Custom CSS -->
     <style>
         body {
             font-family: 'Tajawal', sans-serif;
             background: linear-gradient(-45deg, #667eea, #764ba2, #6B8DD6, #8E37D7);
             background-size: 400% 400%;
             animation: gradientShift 12s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+
         .glass-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: theme('colors.glass.DEFAULT');
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
+            border: 1px solid theme('colors.glass.border');
+            transition: all 0.3s ease;
+            box-shadow: theme('boxShadow.glass');
         }
+
         .completed {
             text-decoration: line-through;
             color: #cbd5e1;
         }
+
         .progress-bar {
             height: 8px;
             border-radius: 4px;
             background-color: rgba(255, 255, 255, 0.2);
         }
+
         .progress-fill {
             height: 100%;
             border-radius: 4px;
             background: linear-gradient(90deg, #667eea 0%, #8E37D7 100%);
             transition: width 0.3s ease;
         }
+
         .task-card {
             transition: all 0.3s ease;
         }
+
         .task-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: theme('boxShadow.glass-hover');
         }
+
         .action-btn {
             width: 36px;
             height: 36px;
@@ -56,30 +139,69 @@
             border-radius: 8px;
             transition: all 0.2s ease;
         }
+
         .complete-btn {
             background-color: #10b981;
             color: white;
         }
+
         .complete-btn:hover {
             background-color: #059669;
         }
+
         .edit-btn {
             background-color: #3b82f6;
             color: white;
         }
+
         .edit-btn:hover {
             background-color: #2563eb;
         }
+
         .delete-btn {
             background-color: #ef4444;
             color: white;
         }
+
         .delete-btn:hover {
             background-color: #dc2626;
         }
+
+        /* For preventing text selection and touch highlight */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            overscroll-behavior: none;
+            touch-action: manipulation;
+        }
+
+        /* NEW: Bottom Navigation Styles */
+        .nav-item {
+            transition: color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .nav-item.active {
+            color: theme('colors.white');
+        }
+
+        .nav-item:active {
+            animation: scale-click 0.2s ease-in-out forwards, fade-click 0.2s ease-in-out forwards;
+        }
+
+        /* Content Area Styling */
+        .main-content {
+            padding-bottom: 80px; /* Space for fixed nav bar */
+            flex: 1; /* For flex layout */
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col overflow-x-hidden">
+<body class="min-h-screen flex flex-col overflow-x-hidden relative">
     <!-- Header -->
     <header class="relative z-10 p-6">
         <div class="max-w-6xl mx-auto flex items-center">
@@ -90,31 +212,34 @@
         </div>
     </header>
 
-    <!-- Progress Section -->
-    <section class="glass-card mx-4 mt-6 rounded-xl p-6 max-w-6xl relative z-10">
-        <div class="flex justify-between items-center mb-2">
-            <h2 class="font-medium text-white">تقدمك اليومي</h2>
-            <span id="progress-percent" class="font-bold text-blue-300">0%</span>
-        </div>
-        <div class="progress-bar">
-            <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
-        </div>
-        <div class="flex justify-between text-sm text-purple-200 mt-2">
-            <span id="completed-count">0 مكتملة</span>
-            <span id="total-count">من أصل 0 مهمة</span>
-        </div>
-    </section>
+    <!-- Main Content Area -->
+    <main class="main-content flex-1 flex flex-col">
+        <!-- Progress Section -->
+        <section class="glass-card mx-4 mt-6 rounded-xl p-6 max-w-6xl relative z-10">
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="font-medium text-white">تقدمك اليومي</h2>
+                <span id="progress-percent" class="font-bold text-blue-300">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-sm text-purple-200 mt-2">
+                <span id="completed-count">0 مكتملة</span>
+                <span id="total-count">من أصل 0 مهمة</span>
+            </div>
+        </section>
 
-    <!-- Tasks List -->
-    <section class="container mx-auto px-4 mt-6 max-w-6xl relative z-10">
-        <div class="space-y-4" id="tasks-container">
-            <!-- Tasks will be loaded here -->
-        </div>
-    </section>
+        <!-- Tasks List -->
+        <section class="container mx-auto px-4 mt-6 max-w-6xl relative z-10 flex-1">
+            <div class="space-y-4" id="tasks-container">
+                <!-- Tasks will be loaded here -->
+            </div>
+        </section>
+    </main>
 
     <!-- Add Task Button -->
-    <div class="fixed bottom-6 right-1/2 transform translate-x-1/2">
-        <button id="add-task-btn" class="bg-white text-indigo-600 p-4 rounded-full shadow-lg hover:bg-gray-100 transition-all">
+    <div class="fixed bottom-20 right-1/2 transform translate-x-1/2 z-10">
+        <button id="add-task-btn" class="bg-white text-indigo-600 p-4 rounded-full shadow-lg hover:bg-gray-100 transition-all button-hover-glow">
             <i data-feather="plus" class="w-6 h-6"></i>
         </button>
     </div>
@@ -148,6 +273,34 @@
             </form>
         </div>
     </div>
+
+    <!-- NEW: Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 z-20 glass-card rounded-t-3xl">
+        <div class="max-w-6xl mx-auto px-4 py-3">
+            <div class="flex justify-around items-center">
+                <a href="index.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="الصفحة الرئيسية" title="الصفحة الرئيسية">
+                    <i data-feather="home" class="w-6 h-6"></i>
+                    <span class="text-xs">الرئيسية</span>
+                </a>
+                <a href="tasks.html" class="nav-item flex flex-col items-center space-y-1 text-white button-hover-glow btn-nav active" data-title="المهام" title="المهام">
+                    <i data-feather="check-square" class="w-6 h-6"></i>
+                    <span class="text-xs">المهام</span>
+                </a>
+                <a href="math.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="الرياضيات" title="الرياضيات">
+                    <i data-feather="calculator" class="w-6 h-6"></i>
+                    <span class="text-xs">الرياضيات</span>
+                </a>
+                <a href="notifications.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="التنبيهات" title="التنبيهات">
+                    <i data-feather="bell" class="w-6 h-6"></i>
+                    <span class="text-xs">التنبيهات</span>
+                </a>
+                <a href="profile.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="الاعدادات" title="الإعدادات">
+                    <i data-feather="user" class="w-6 h-6"></i>
+                    <span class="text-xs">الاعدادات</span>
+                </a>
+            </div>
+        </div>
+    </nav>
 
     <script>
         // Initialize feather icons
@@ -403,6 +556,31 @@
             completedCount.textContent = `${completed} مكتملة`;
             totalCount.textContent = `من أصل ${total} مهمة`;
         }
+
+        // --- NEW: Handle Bottom Navigation Clicks ---
+        document.querySelectorAll('.btn-nav').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default navigation for now
+
+                // Remove 'active' class from all nav items
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                    item.classList.remove('text-white');
+                    item.classList.add('text-purple-200');
+                });
+
+                // Add 'active' class to clicked item
+                this.classList.add('active');
+                this.classList.remove('text-purple-200');
+                this.classList.add('text-white');
+
+                const title = this.getAttribute('data-title');
+                const href = this.getAttribute('href');
+                console.log(`Navigating to: ${href} (Title: ${title})`); // Log for clarity
+                // In a real SPA, this would trigger page load
+                window.location.href = href; // Navigate to the page
+            });
+        });
     </script>
 </body>
 </html>
