@@ -3,584 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المهام اليومية - Six Pro</title>
-    <!-- 1. Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 2. Tailwind Config for consistent theme -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'sans': ['Tajawal', 'sans-serif'],
-                    },
-                    colors: {
-                        'primary': {
-                            50: '#f0f4ff',
-                            100: '#e0e7ff',
-                            200: '#c7d2fe',
-                            300: '#a5b4fc',
-                            400: '#818cf8',
-                            500: '#667eea', // Main primary color
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            800: '#3730a3',
-                            900: '#312e81',
-                        },
-                        'secondary': {
-                            50: '#f0f1f9',
-                            100: '#e0e1f0',
-                            200: '#c8cbe6',
-                            300: '#a9afda',
-                            400: '#8a93ce',
-                            500: '#764ba2', // Main secondary color
-                            600: '#6b4193',
-                            700: '#5a377a',
-                            800: '#492d60',
-                            900: '#382447',
-                        },
-                        'glass': {
-                            DEFAULT: 'rgba(255, 255, 255, 0.1)',
-                            'border': 'rgba(255, 255, 255, 0.2)',
-                        }
-                    },
-                    borderRadius: {
-                        'xl': '0.75rem',
-                        '2xl': '1rem',
-                        '3xl': '1.5rem',
-                    },
-                    boxShadow: {
-                        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
-                        'glass-hover': '0 20px 40px rgba(0, 0, 0, 0.2), 0 4px 20px rgba(102, 126, 234, 0.6), 0 6px 30px rgba(118, 75, 162, 0.4)',
-                        'button-hover': '0 0 15px rgba(102, 126, 234, 0.7)',
-                    },
-                    animation: {
-                        'gradient-shift': 'gradientShift 12s ease infinite',
-                        'scale-click': 'scaleClick 0.2s ease-in-out forwards',
-                        'fade-click': 'fadeClick 0.2s ease-in-out forwards',
-                    },
-                    keyframes: {
-                        gradientShift: {
-                            '0%, 100%': { 'background-position': '0% 50%' },
-                            '50%': { 'background-position': '100% 50%' },
-                        },
-                        scaleClick: {
-                            '0%': { transform: 'scale(1)' },
-                            '50%': { transform: 'scale(0.95)' },
-                            '100%': { transform: 'scale(1)' },
-                        },
-                        fadeClick: {
-                            '0%': { opacity: '0.8' },
-                            '50%': { opacity: '0.6' },
-                            '100%': { opacity: '0.8' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- 3. Feather Icons -->
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-    <!-- 4. Tajawal Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- 5. Custom CSS -->
+    <title>المساعد الدراسي الملكي - نظام 12 ساعة</title>
     <style>
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background: linear-gradient(-45deg, #667eea, #764ba2, #6B8DD6, #8E37D7);
-            background-size: 400% 400%;
-            animation: gradientShift 12s ease infinite;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
+        :root { --gold: #d4af37; --black: #050505; --gray: #121212; --white: #ffffff; }
+        body { background-color: var(--black); color: var(--gold); font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 10px; }
+        .header { position: sticky; top: 0; background: var(--black); z-index: 100; border-bottom: 2px solid var(--gold); padding: 10px; margin-bottom: 20px; text-align: center; }
+        .clock { font-size: 1.8em; color: var(--white); font-family: monospace; margin: 5px 0; }
+        .btn-audio { background: var(--gold); color: #000; border: none; padding: 12px 25px; border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 1em; box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+        .container { max-width: 650px; margin: 0 auto; padding-bottom: 50px; }
+        .row { 
+            display: flex; justify-content: space-between; padding: 15px; 
+            margin-bottom: 10px; border-radius: 12px; border: 1px solid #222;
+            background: var(--gray); transition: all 0.4s ease; align-items: center;
         }
-
-        .glass-card {
-            background: theme('colors.glass.DEFAULT');
-            backdrop-filter: blur(10px);
-            border: 1px solid theme('colors.glass.border');
-            transition: all 0.3s ease;
-            box-shadow: theme('boxShadow.glass');
+        .active-now { 
+            border: 2px solid var(--gold); 
+            background: #1a1a00; 
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
+            transform: scale(1.03);
         }
-
-        .completed {
-            text-decoration: line-through;
-            color: #cbd5e1;
-        }
-
-        .progress-bar {
-            height: 8px;
-            border-radius: 4px;
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .progress-fill {
-            height: 100%;
-            border-radius: 4px;
-            background: linear-gradient(90deg, #667eea 0%, #8E37D7 100%);
-            transition: width 0.3s ease;
-        }
-
-        .task-card {
-            transition: all 0.3s ease;
-        }
-
-        .task-card:hover {
-            transform: translateY(-2px);
-            box-shadow: theme('boxShadow.glass-hover');
-        }
-
-        .action-btn {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-        }
-
-        .complete-btn {
-            background-color: #10b981;
-            color: white;
-        }
-
-        .complete-btn:hover {
-            background-color: #059669;
-        }
-
-        .edit-btn {
-            background-color: #3b82f6;
-            color: white;
-        }
-
-        .edit-btn:hover {
-            background-color: #2563eb;
-        }
-
-        .delete-btn {
-            background-color: #ef4444;
-            color: white;
-        }
-
-        .delete-btn:hover {
-            background-color: #dc2626;
-        }
-
-        /* For preventing text selection and touch highlight */
-        * {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html, body {
-            overscroll-behavior: none;
-            touch-action: manipulation;
-        }
-
-        /* NEW: Bottom Navigation Styles */
-        .nav-item {
-            transition: color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
-        }
-
-        .nav-item.active {
-            color: theme('colors.white');
-        }
-
-        .nav-item:active {
-            animation: scale-click 0.2s ease-in-out forwards, fade-click 0.2s ease-in-out forwards;
-        }
-
-        /* Content Area Styling */
-        .main-content {
-            padding-bottom: 80px; /* Space for fixed nav bar */
-            flex: 1; /* For flex layout */
-        }
+        .study { border-right: 6px solid var(--gold); }
+        .rest { border-right: 6px solid var(--white); opacity: 0.6; color: var(--white); }
+        .big-break { border-right: 6px solid #e74c3c; background: #221111; color: #ff9999; }
+        .time { width: 45%; font-weight: bold; font-family: monospace; font-size: 1em; text-align: right; }
+        .task { width: 55%; text-align: right; font-size: 1.1em; padding-right: 10px; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col overflow-x-hidden relative">
-    <!-- Header -->
-    <header class="relative z-10 p-6">
-        <div class="max-w-6xl mx-auto flex items-center">
-            <a href="index.html" class="text-white">
-                <i data-feather="arrow-right" class="w-6 h-6"></i>
-            </a>
-            <h1 class="text-xl font-bold text-white mx-auto">المهام اليومية</h1>
-        </div>
-    </header>
+<body>
 
-    <!-- Main Content Area -->
-    <main class="main-content flex-1 flex flex-col">
-        <!-- Progress Section -->
-        <section class="glass-card mx-4 mt-6 rounded-xl p-6 max-w-6xl relative z-10">
-            <div class="flex justify-between items-center mb-2">
-                <h2 class="font-medium text-white">تقدمك اليومي</h2>
-                <span id="progress-percent" class="font-bold text-blue-300">0%</span>
-            </div>
-            <div class="progress-bar">
-                <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
-            </div>
-            <div class="flex justify-between text-sm text-purple-200 mt-2">
-                <span id="completed-count">0 مكتملة</span>
-                <span id="total-count">من أصل 0 مهمة</span>
-            </div>
-        </section>
-
-        <!-- Tasks List -->
-        <section class="container mx-auto px-4 mt-6 max-w-6xl relative z-10 flex-1">
-            <div class="space-y-4" id="tasks-container">
-                <!-- Tasks will be loaded here -->
-            </div>
-        </section>
-    </main>
-
-    <!-- Add Task Button -->
-    <div class="fixed bottom-20 right-1/2 transform translate-x-1/2 z-10">
-        <button id="add-task-btn" class="bg-white text-indigo-600 p-4 rounded-full shadow-lg hover:bg-gray-100 transition-all button-hover-glow">
-            <i data-feather="plus" class="w-6 h-6"></i>
-        </button>
+    <div class="header">
+        <div class="clock" id="liveClock">00:00:00</div>
+        <button class="btn-audio" onclick="enableAudio()">تفعيل التنبيه الصوتي 🔔</button>
     </div>
 
-    <!-- Add Task Modal -->
-    <div id="task-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
-        <div class="glass-card p-6 w-full max-w-md mx-4">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold text-white">إضافة مهمة جديدة</h3>
-                <button id="close-modal" class="text-white">
-                    <i data-feather="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-            <form id="task-form">
-                <input type="hidden" id="task-id">
-                <div class="mb-4">
-                    <label class="block text-white mb-2">المهمة</label>
-                    <input type="text" id="task-title" class="w-full px-4 py-2 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 bg-white/20 text-white placeholder:text-white/50" required>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-white mb-2">الموعد النهائي</label>
-                    <input type="datetime-local" id="task-deadline" class="w-full px-4 py-2 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 bg-white/20 text-white">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-white mb-2">ملاحظات (اختياري)</label>
-                    <textarea id="task-notes" class="w-full px-4 py-2 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 bg-white/20 text-white placeholder:text-white/50" rows="3"></textarea>
-                </div>
-                <button type="submit" class="w-full bg-white text-indigo-600 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors">
-                    حفظ المهمة
-                </button>
-            </form>
+    <div class="container" id="scheduleBoard">
         </div>
-    </div>
 
-    <!-- NEW: Bottom Navigation Bar -->
-    <nav class="fixed bottom-0 left-0 right-0 z-20 glass-card rounded-t-3xl">
-        <div class="max-w-6xl mx-auto px-4 py-3">
-            <div class="flex justify-around items-center">
-                <a href="index.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="الصفحة الرئيسية" title="الصفحة الرئيسية">
-                    <i data-feather="home" class="w-6 h-6"></i>
-                    <span class="text-xs">الرئيسية</span>
-                </a>
-                <a href="tasks.html" class="nav-item flex flex-col items-center space-y-1 text-white button-hover-glow btn-nav active" data-title="المهام" title="المهام">
-                    <i data-feather="check-square" class="w-6 h-6"></i>
-                    <span class="text-xs">المهام</span>
-                </a>
-                <a href="math.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="الرياضيات" title="الرياضيات">
-                    <i data-feather="calculator" class="w-6 h-6"></i>
-                    <span class="text-xs">الرياضيات</span>
-                </a>
-                <a href="notifications.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="التنبيهات" title="التنبيهات">
-                    <i data-feather="bell" class="w-6 h-6"></i>
-                    <span class="text-xs">التنبيهات</span>
-                </a>
-                <a href="profile.html" class="nav-item flex flex-col items-center space-y-1 text-purple-200 button-hover-glow btn-nav" data-title="الاعدادات" title="الإعدادات">
-                    <i data-feather="user" class="w-6 h-6"></i>
-                    <span class="text-xs">الاعدادات</span>
-                </a>
-            </div>
-        </div>
-    </nav>
+    <audio id="bell" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
 
     <script>
-        // Initialize feather icons
-        feather.replace();
-
-        // DOM Elements
-        const addTaskBtn = document.getElementById('add-task-btn');
-        const taskModal = document.getElementById('task-modal');
-        const closeModal = document.getElementById('close-modal');
-        const taskForm = document.getElementById('task-form');
-        const tasksContainer = document.getElementById('tasks-container');
-        const progressPercent = document.getElementById('progress-percent');
-        const progressFill = document.getElementById('progress-fill');
-        const completedCount = document.getElementById('completed-count');
-        const totalCount = document.getElementById('total-count');
-
-        // Load tasks from localStorage on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            loadTasks();
-            updateProgress();
-        });
-
-        // Modal handling
-        addTaskBtn.addEventListener('click', () => {
-            // Reset form
-            taskForm.reset();
-            document.getElementById('task-id').value = '';
-            document.querySelector('#task-modal h3').textContent = 'إضافة مهمة جديدة';
-            taskModal.classList.remove('hidden');
-        });
-
-        closeModal.addEventListener('click', () => {
-            taskModal.classList.add('hidden');
-        });
-
-        // Close modal when clicking outside
-        window.addEventListener('click', (e) => {
-            if (e.target === taskModal) {
-                taskModal.classList.add('hidden');
-            }
-        });
-
-        // Handle form submission
-        taskForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+        const fullDaySchedule = [
+            { start: "11:10 ص", end: "12:00 م", task: "فيزياء ف1 - جلسة 1", type: "study", sM: 670, eM: 720 },
+            { start: "12:00 م", end: "12:10 م", task: "استراحة ☕", type: "rest", sM: 720, eM: 730 },
+            { start: "12:10 م", end: "01:00 م", task: "فيزياء ف1 - جلسة 2", type: "study", sM: 730, eM: 780 },
+            { start: "01:00 م", end: "01:10 م", task: "استراحة ☕", type: "rest", sM: 780, eM: 790 },
+            { start: "01:10 م", end: "02:00 م", task: "فيزياء ف1 - جلسة 3", type: "study", sM: 790, eM: 840 },
+            { start: "02:00 م", end: "02:10 م", task: "استراحة ☕", type: "rest", sM: 840, eM: 850 },
+            { start: "02:10 م", end: "03:00 م", task: "فيزياء ف1 - جلسة 4", type: "study", sM: 850, eM: 900 },
+            { start: "03:00 م", end: "04:00 م", task: "غداء + صلاة + راحة 🍱", type: "big-break", sM: 900, eM: 960 },
             
-            const id = document.getElementById('task-id').value || Date.now().toString();
-            const title = document.getElementById('task-title').value;
-            const deadline = document.getElementById('task-deadline').value;
-            const notes = document.getElementById('task-notes').value;
-            const completed = document.getElementById('task-id').value ? 
-                getTaskById(document.getElementById('task-id').value)?.completed || false : false;
-            
-            const task = {
-                id,
-                title,
-                deadline,
-                notes,
-                completed
-            };
-            
-            if (document.getElementById('task-id').value) {
-                // Update existing task
-                updateTask(task);
-            } else {
-                // Add new task
-                addTask(task);
-            }
-            
-            // Save to localStorage
-            saveTask(task);
-            
-            // Update UI
-            renderTasks();
-            updateProgress();
-            
-            // Close modal
-            taskModal.classList.add('hidden');
-        });
+            { start: "04:00 م", end: "04:50 م", task: "رياضيات ف2 - جلسة 1", type: "study", sM: 960, eM: 1010 },
+            { start: "04:50 م", end: "05:00 م", task: "استراحة ☕", type: "rest", sM: 1010, eM: 1020 },
+            { start: "05:00 م", end: "05:50 م", task: "رياضيات ف2 - جلسة 2", type: "study", sM: 1020, eM: 1070 },
+            { start: "05:50 م", end: "06:00 م", task: "استراحة ☕", type: "rest", sM: 1070, eM: 1080 },
+            { start: "06:00 م", end: "06:50 م", task: "رياضيات ف2 - جلسة 3", type: "study", sM: 1080, eM: 1130 },
+            { start: "06:50 م", end: "07:00 م", task: "استراحة ☕", type: "rest", sM: 1130, eM: 1140 },
+            { start: "07:00 م", end: "08:00 م", task: "رياضيات ف2 - جلسة 4", type: "study", sM: 1140, eM: 1200 },
+            { start: "08:00 م", end: "09:00 م", task: "عشاء + راحة محارب 🥗", type: "big-break", sM: 1200, eM: 1260 },
 
-        // Add task
-        function addTask(task) {
-            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            tasks.push(task);
-            localStorage.setItem('tasks', JSON.stringify(tasks));
+            { start: "09:00 م", end: "09:50 م", task: "أدب - جلسة 1", type: "study", sM: 1260, eM: 1310 },
+            { start: "09:50 م", end: "10:00 م", task: "استراحة ☕", type: "rest", sM: 1310, eM: 1320 },
+            { start: "10:00 م", end: "10:50 م", task: "أدب - جلسة 2", type: "study", sM: 1320, eM: 1370 },
+            { start: "10:50 م", end: "11:00 م", task: "استراحة ☕", type: "rest", sM: 1370, eM: 1380 },
+            { start: "11:00 م", end: "11:50 م", task: "أدب - جلسة 3", type: "study", sM: 1380, eM: 1430 },
+            { start: "11:50 م", end: "12:00 ص", task: "استراحة ☕", type: "rest", sM: 1430, eM: 1440 },
+            { start: "12:00 ص", end: "12:50 ص", task: "أدب - جلسة 4", type: "study", sM: 1440, eM: 1490 },
+            { start: "12:50 ص", end: "01:00 ص", task: "استراحة ☕", type: "rest", sM: 1490, eM: 1500 },
+            { start: "01:00 ص", end: "02:00 ص", task: "أدب - مراجعة أخيرة", type: "study", sM: 1500, eM: 1560 }
+        ];
+
+        function enableAudio() {
+            document.getElementById('bell').play();
+            alert("تم تفعيل المنبه الصوتي!");
         }
 
-        // Update task
-        function updateTask(updatedTask) {
-            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            tasks = tasks.map(task => task.id === updatedTask.id ? updatedTask : task);
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
+        function refresh() {
+            const now = new Date();
+            let currentMins = now.getHours() * 60 + now.getMinutes();
+            // معالجة الوقت بعد منتصف الليل للحساب
+            if (now.getHours() < 5) currentMins += 1440;
 
-        // Delete task
-        function deleteTask(id) {
-            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            tasks = tasks.filter(task => task.id !== id);
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-            renderTasks();
-            updateProgress();
-        }
+            document.getElementById('liveClock').innerText = now.toLocaleTimeString('ar-EG', { hour12: true });
 
-        // Toggle task completion
-        function toggleTaskCompletion(id) {
-            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            tasks = tasks.map(task => {
-                if (task.id === id) {
-                    return {...task, completed: !task.completed};
+            const board = document.getElementById('scheduleBoard');
+            board.innerHTML = '';
+
+            fullDaySchedule.forEach(item => {
+                const row = document.createElement('div');
+                row.className = `row ${item.type}`;
+                
+                if (currentMins >= item.sM && currentMins < item.eM) {
+                    row.classList.add('active-now');
+                    if (now.getSeconds() === 0) document.getElementById('bell').play();
                 }
-                return task;
+
+                row.innerHTML = `<span class="time">${item.start} - ${item.end}</span><span class="task">${item.task}</span>`;
+                board.appendChild(row);
             });
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-            renderTasks();
-            updateProgress();
         }
 
-        // Get task by ID
-        function getTaskById(id) {
-            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            return tasks.find(task => task.id === id);
-        }
-
-        // Save task to localStorage
-        function saveTask(task) {
-            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            const existingIndex = tasks.findIndex(t => t.id === task.id);
-            
-            if (existingIndex !== -1) {
-                tasks[existingIndex] = task;
-            } else {
-                tasks.push(task);
-            }
-            
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
-
-        // Load tasks from localStorage
-        function loadTasks() {
-            renderTasks();
-        }
-
-        // Render tasks
-        function renderTasks() {
-            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            tasksContainer.innerHTML = '';
-            
-            if (tasks.length === 0) {
-                tasksContainer.innerHTML = `
-                    <div class="glass-card rounded-xl p-8 text-center">
-                        <i data-feather="check-circle" class="w-12 h-12 text-white/50 mx-auto mb-4"></i>
-                        <h3 class="text-lg font-medium text-white">لا توجد مهام</h3>
-                        <p class="text-purple-200 mt-2">اضغط على زر "+" لإضافة مهمة جديدة</p>
-                    </div>
-                `;
-                feather.replace();
-                return;
-            }
-            
-            tasks.forEach(task => {
-                const taskElement = document.createElement('div');
-                taskElement.className = `task-card glass-card rounded-xl p-4 flex items-start ${task.completed ? 'opacity-80' : ''}`;
-                taskElement.dataset.id = task.id;
-                
-                // Format deadline
-                let deadlineText = '';
-                if (task.deadline) {
-                    const deadlineDate = new Date(task.deadline);
-                    const now = new Date();
-                    const diffTime = deadlineDate - now;
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    
-                    if (diffDays < 0) {
-                        deadlineText = 'متأخرة';
-                    } else if (diffDays === 0) {
-                        deadlineText = 'اليوم';
-                    } else if (diffDays === 1) {
-                        deadlineText = 'غداً';
-                    } else {
-                        deadlineText = `بعد ${diffDays} أيام`;
-                    }
-                }
-                
-                taskElement.innerHTML = `
-                    <div class="flex-1">
-                        <h3 class="font-medium text-white ${task.completed ? 'completed' : ''}">${task.title}</h3>
-                        ${task.deadline ? `<p class="text-sm text-purple-200 mt-1">الموعد النهائي: ${deadlineText}</p>` : ''}
-                        ${task.notes ? `<p class="text-sm text-purple-200 mt-2">${task.notes}</p>` : ''}
-                    </div>
-                    <div class="flex space-x-2 mr-2">
-                        <button class="action-btn complete-btn" data-id="${task.id}">
-                            <i data-feather="${task.completed ? 'check-circle' : 'circle'}" class="w-5 h-5"></i>
-                        </button>
-                        <button class="action-btn edit-btn" data-id="${task.id}">
-                            <i data-feather="edit-2" class="w-5 h-5"></i>
-                        </button>
-                        <button class="action-btn delete-btn" data-id="${task.id}">
-                            <i data-feather="trash-2" class="w-5 h-5"></i>
-                        </button>
-                    </div>
-                `;
-                
-                tasksContainer.appendChild(taskElement);
-            });
-            
-            // Add event listeners
-            document.querySelectorAll('.complete-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = btn.dataset.id;
-                    toggleTaskCompletion(id);
-                });
-            });
-            
-            document.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = btn.dataset.id;
-                    editTask(id);
-                });
-            });
-            
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = btn.dataset.id;
-                    deleteTask(id);
-                });
-            });
-            
-            feather.replace();
-        }
-
-        // Edit task
-        function editTask(id) {
-            const task = getTaskById(id);
-            if (task) {
-                document.getElementById('task-id').value = task.id;
-                document.getElementById('task-title').value = task.title;
-                document.getElementById('task-deadline').value = task.deadline || '';
-                document.getElementById('task-notes').value = task.notes || '';
-                document.querySelector('#task-modal h3').textContent = 'تعديل المهمة';
-                taskModal.classList.remove('hidden');
-            }
-        }
-
-        // Update progress
-        function updateProgress() {
-            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-            const total = tasks.length;
-            const completed = tasks.filter(task => task.completed).length;
-            const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
-            
-            progressPercent.textContent = `${percent}%`;
-            progressFill.style.width = `${percent}%`;
-            completedCount.textContent = `${completed} مكتملة`;
-            totalCount.textContent = `من أصل ${total} مهمة`;
-        }
-
-        // --- NEW: Handle Bottom Navigation Clicks ---
-        document.querySelectorAll('.btn-nav').forEach(button => {
-            button.addEventListener('click', function(event) {
-                event.preventDefault(); // Prevent default navigation for now
-
-                // Remove 'active' class from all nav items
-                document.querySelectorAll('.nav-item').forEach(item => {
-                    item.classList.remove('active');
-                    item.classList.remove('text-white');
-                    item.classList.add('text-purple-200');
-                });
-
-                // Add 'active' class to clicked item
-                this.classList.add('active');
-                this.classList.remove('text-purple-200');
-                this.classList.add('text-white');
-
-                const title = this.getAttribute('data-title');
-                const href = this.getAttribute('href');
-                console.log(`Navigating to: ${href} (Title: ${title})`); // Log for clarity
-                // In a real SPA, this would trigger page load
-                window.location.href = href; // Navigate to the page
-            });
-        });
+        setInterval(refresh, 1000);
+        refresh();
     </script>
 </body>
 </html>
