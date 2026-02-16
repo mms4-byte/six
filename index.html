@@ -2,108 +2,156 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المساعد الدراسي الملكي - نظام 12 ساعة</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>النظام الملكي V17</title>
     <style>
-        :root { --gold: #d4af37; --black: #050505; --gray: #121212; --white: #ffffff; }
-        body { background-color: var(--black); color: var(--gold); font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 10px; }
-        .header { position: sticky; top: 0; background: var(--black); z-index: 100; border-bottom: 2px solid var(--gold); padding: 10px; margin-bottom: 20px; text-align: center; }
-        .clock { font-size: 1.8em; color: var(--white); font-family: monospace; margin: 5px 0; }
-        .btn-audio { background: var(--gold); color: #000; border: none; padding: 12px 25px; border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 1em; box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
-        .container { max-width: 650px; margin: 0 auto; padding-bottom: 50px; }
-        .row { 
-            display: flex; justify-content: space-between; padding: 15px; 
-            margin-bottom: 10px; border-radius: 12px; border: 1px solid #222;
-            background: var(--gray); transition: all 0.4s ease; align-items: center;
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            background-color: #000;
+            height: 100vh;
+            overflow: hidden;
+            font-family: system-ui, sans-serif;
         }
-        .active-now { 
-            border: 2px solid var(--gold); 
-            background: #1a1a00; 
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
-            transform: scale(1.03);
+
+        /* زر القائمة العائم */
+        .menu-trigger {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 2000;
+            cursor: pointer;
+            background: rgba(0, 255, 204, 0.15);
+            padding: 10px;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 255, 204, 0.4);
+            transition: 0.3s;
         }
-        .study { border-right: 6px solid var(--gold); }
-        .rest { border-right: 6px solid var(--white); opacity: 0.6; color: var(--white); }
-        .big-break { border-right: 6px solid #e74c3c; background: #221111; color: #ff9999; }
-        .time { width: 45%; font-weight: bold; font-family: monospace; font-size: 1em; text-align: right; }
-        .task { width: 55%; text-align: right; font-size: 1.1em; padding-right: 10px; }
+        .menu-trigger svg { fill: #00ffcc; width: 30px; height: 30px; }
+
+        /* القائمة الجانبية (نصف الشاشة) */
+        .side-panel {
+            position: fixed;
+            top: 0;
+            right: -50%;
+            width: 50%;
+            height: 100%;
+            background: #0a0a0a;
+            z-index: 1999;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            border-left: 2px solid #00ffcc;
+        }
+        .side-panel.active { transform: translateX(-100%); }
+
+        /* شريط الأيقونات */
+        .icon-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px 10px;
+            background: #111;
+            border-bottom: 1px solid #222;
+        }
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .btn-icon svg { width: 28px; height: 28px; fill: currentColor; }
+        .btn-icon.paste { color: #00ffcc; }
+        .btn-icon.delete { color: #ff5f56; }
+        .btn-icon.close { color: #eab308; }
+
+        /* المحرر */
+        .editor {
+            flex: 1;
+            background: transparent;
+            color: #00ff88;
+            padding: 20px;
+            font-family: 'Consolas', monospace;
+            font-size: 16px;
+            border: none;
+            outline: none;
+            resize: none;
+        }
+
+        /* حاوية العرض لمنع التعليق */
+        .viewer-container {
+            width: 100%;
+            height: 100vh;
+            background: #fff;
+            overflow: auto; /* يسمح بالتمرير الداخلي */
+            -webkit-overflow-scrolling: touch;
+        }
+        iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="clock" id="liveClock">00:00:00</div>
-        <button class="btn-audio" onclick="enableAudio()">تفعيل التنبيه الصوتي 🔔</button>
+    <div class="menu-trigger" onclick="toggleMenu()">
+        <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
     </div>
 
-    <div class="container" id="scheduleBoard">
+    <div class="side-panel" id="panel">
+        <div class="icon-bar">
+            <button class="btn-icon paste" onclick="doPaste()"><svg viewBox="0 0 24 24"><path d="M19 2h-4.18C14.4.84 13.3 0 12 0c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 18H5V4h2v3h10V4h2v16z"/></svg></button>
+            <button class="btn-icon delete" onclick="doDelete()"><svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
+            <button class="btn-icon close" onclick="toggleMenu()"><svg viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg></button>
         </div>
+        <textarea id="codeEditor" class="editor" placeholder="ألصق كودك هنا..." spellcheck="false"></textarea>
+    </div>
 
-    <audio id="bell" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+    <div class="viewer-container">
+        <iframe id="output"></iframe>
+    </div>
 
     <script>
-        const fullDaySchedule = [
-            { start: "11:10 ص", end: "12:00 م", task: "فيزياء ف1 - جلسة 1", type: "study", sM: 670, eM: 720 },
-            { start: "12:00 م", end: "12:10 م", task: "استراحة ☕", type: "rest", sM: 720, eM: 730 },
-            { start: "12:10 م", end: "01:00 م", task: "فيزياء ف1 - جلسة 2", type: "study", sM: 730, eM: 780 },
-            { start: "01:00 م", end: "01:10 م", task: "استراحة ☕", type: "rest", sM: 780, eM: 790 },
-            { start: "01:10 م", end: "02:00 م", task: "فيزياء ف1 - جلسة 3", type: "study", sM: 790, eM: 840 },
-            { start: "02:00 م", end: "02:10 م", task: "استراحة ☕", type: "rest", sM: 840, eM: 850 },
-            { start: "02:10 م", end: "03:00 م", task: "فيزياء ف1 - جلسة 4", type: "study", sM: 850, eM: 900 },
-            { start: "03:00 م", end: "04:00 م", task: "غداء + صلاة + راحة 🍱", type: "big-break", sM: 900, eM: 960 },
-            
-            { start: "04:00 م", end: "04:50 م", task: "رياضيات ف2 - جلسة 1", type: "study", sM: 960, eM: 1010 },
-            { start: "04:50 م", end: "05:00 م", task: "استراحة ☕", type: "rest", sM: 1010, eM: 1020 },
-            { start: "05:00 م", end: "05:50 م", task: "رياضيات ف2 - جلسة 2", type: "study", sM: 1020, eM: 1070 },
-            { start: "05:50 م", end: "06:00 م", task: "استراحة ☕", type: "rest", sM: 1070, eM: 1080 },
-            { start: "06:00 م", end: "06:50 م", task: "رياضيات ف2 - جلسة 3", type: "study", sM: 1080, eM: 1130 },
-            { start: "06:50 م", end: "07:00 م", task: "استراحة ☕", type: "rest", sM: 1130, eM: 1140 },
-            { start: "07:00 م", end: "08:00 م", task: "رياضيات ف2 - جلسة 4", type: "study", sM: 1140, eM: 1200 },
-            { start: "08:00 م", end: "09:00 م", task: "عشاء + راحة محارب 🥗", type: "big-break", sM: 1200, eM: 1260 },
+        const panel = document.getElementById('panel');
+        const editor = document.getElementById('codeEditor');
+        const output = document.getElementById('output');
+        let timeout;
 
-            { start: "09:00 م", end: "09:50 م", task: "أدب - جلسة 1", type: "study", sM: 1260, eM: 1310 },
-            { start: "09:50 م", end: "10:00 م", task: "استراحة ☕", type: "rest", sM: 1310, eM: 1320 },
-            { start: "10:00 م", end: "10:50 م", task: "أدب - جلسة 2", type: "study", sM: 1320, eM: 1370 },
-            { start: "10:50 م", end: "11:00 م", task: "استراحة ☕", type: "rest", sM: 1370, eM: 1380 },
-            { start: "11:00 م", end: "11:50 م", task: "أدب - جلسة 3", type: "study", sM: 1380, eM: 1430 },
-            { start: "11:50 م", end: "12:00 ص", task: "استراحة ☕", type: "rest", sM: 1430, eM: 1440 },
-            { start: "12:00 ص", end: "12:50 ص", task: "أدب - جلسة 4", type: "study", sM: 1440, eM: 1490 },
-            { start: "12:50 ص", end: "01:00 ص", task: "استراحة ☕", type: "rest", sM: 1490, eM: 1500 },
-            { start: "01:00 ص", end: "02:00 ص", task: "أدب - مراجعة أخيرة", type: "study", sM: 1500, eM: 1560 }
-        ];
+        function toggleMenu() { panel.classList.toggle('active'); }
 
-        function enableAudio() {
-            document.getElementById('bell').play();
-            alert("تم تفعيل المنبه الصوتي!");
+        // تحسين الأداء: تحديث ذكي يمنع الـ "لاك"
+        function update() {
+            const content = editor.value;
+            const doc = output.contentWindow.document;
+            doc.open();
+            doc.write(content);
+            doc.close();
         }
 
-        function refresh() {
-            const now = new Date();
-            let currentMins = now.getHours() * 60 + now.getMinutes();
-            // معالجة الوقت بعد منتصف الليل للحساب
-            if (now.getHours() < 5) currentMins += 1440;
+        // خاصية الـ Debounce: تنتظر توقف الكتابة قليلاً قبل التحديث
+        editor.addEventListener('input', () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(update, 300); 
+        });
 
-            document.getElementById('liveClock').innerText = now.toLocaleTimeString('ar-EG', { hour12: true });
+        function doDelete() { editor.value = ""; update(); }
 
-            const board = document.getElementById('scheduleBoard');
-            board.innerHTML = '';
-
-            fullDaySchedule.forEach(item => {
-                const row = document.createElement('div');
-                row.className = `row ${item.type}`;
-                
-                if (currentMins >= item.sM && currentMins < item.eM) {
-                    row.classList.add('active-now');
-                    if (now.getSeconds() === 0) document.getElementById('bell').play();
-                }
-
-                row.innerHTML = `<span class="time">${item.start} - ${item.end}</span><span class="task">${item.task}</span>`;
-                board.appendChild(row);
-            });
+        async function doPaste() {
+            try {
+                const text = await navigator.clipboard.readText();
+                editor.value += text;
+                update();
+            } catch (err) {}
         }
 
-        setInterval(refresh, 1000);
-        refresh();
+        window.onload = () => {
+            editor.value = `<div style="height:200vh; background:linear-gradient(#eecda3, #ef629f); padding:50px; text-align:center; font-family:sans-serif;">
+                <h1>تم حل مشكلة الـ "لاك" ✅</h1>
+                <p>جرب الآن التمرير (Scroll) لأسفل، ستجد السلاسة فائقة.</p>
+                <div style="margin-top:500px;">نهاية الصفحة - التمرير يعمل بامتياز</div>
+            </div>`;
+            update();
+        };
     </script>
 </body>
 </html>
