@@ -2,167 +2,432 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>النظام الملكي V18 - العرض الكامل</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>النظام الملكي V21 - Ultimate</title>
+    
+    <!-- خطوط وأيقونات -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
+        :root {
+            --bg-body: #09090b;
+            --bg-panel: #18181b;
+            --bg-editor: #1e1e1e;
+            --primary: #6366f1; /* Indigo */
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --accent: #ec4899; /* Pink */
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --border: #27272a;
+            --glass: rgba(24, 24, 27, 0.7);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
         
         body {
-            background-color: #050505;
+            background-color: var(--bg-body);
             height: 100vh;
             width: 100vw;
             overflow: hidden;
+            font-family: 'Cairo', sans-serif;
             display: flex;
             flex-direction: column;
+            color: var(--text-main);
         }
 
-        /* زر القائمة */
-        .menu-trigger {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            z-index: 2000;
-            cursor: pointer;
-            background: rgba(0, 255, 204, 0.1);
-            padding: 8px;
-            border-radius: 10px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(0, 255, 204, 0.3);
-        }
-        .menu-trigger svg { fill: #00ffcc; width: 25px; height: 25px; }
-
-        /* القائمة الجانبية */
-        .side-panel {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 85%;
-            max-width: 400px;
-            height: 100%;
-            background: #0a0a0a;
-            z-index: 1999;
-            transition: 0.3s ease-in-out;
+        /* --- الشريط العلوي (Header) --- */
+        .app-header {
+            height: 60px;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
             display: flex;
-            flex-direction: column;
-            border-left: 2px solid #00ffcc;
-        }
-        .side-panel.active { right: 0; }
-
-        .editor {
-            flex: 1;
-            background: transparent;
-            color: #00ff88;
-            padding: 15px;
-            font-family: monospace;
-            font-size: 14px;
-            border: none;
-            outline: none;
-            resize: none;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
 
-        /* شاشة العرض تملأ المساحة بالكامل */
-        .viewer-container {
-            flex: 1;
-            width: 100%;
-            height: 100%;
-            background: #000;
-        }
-        
-        iframe { 
-            width: 100%; 
-            height: 100%; 
-            border: none;
-            display: block;
+        .logo {
+            font-weight: 800;
+            font-size: 1.2rem;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .icon-bar {
-            padding: 10px;
-            background: #111;
+        .header-tools {
             display: flex;
             gap: 10px;
         }
-        .btn {
-            background: #222;
-            color: #00ffcc;
-            border: 1px solid #00ffcc;
-            padding: 5px 10px;
-            border-radius: 5px;
+
+        .tool-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-btn:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .tool-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* --- منطقة العرض (Viewer) --- */
+        .viewer-area {
+            flex: 1;
+            position: relative;
+            background: 
+                radial-gradient(circle at 50% 50%, #1a1a1a 0%, #09090b 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        iframe {
+            border: none;
+            background: #fff; /* خلفية بيضاء للكود المضمن لضمان ظهور الألوان */
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        /* وضع الهاتف الواقعي */
+        .mobile-mode iframe {
+            width: 375px;
+            height: 812px; /* iPhone X dimensions */
+            border-radius: 40px;
+            border: 10px solid #2a2a2a;
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* إضافة "النتش" (الكاميرا) الوهمية للهاتف */
+        .mobile-mode iframe::before {
+            content: '';
+            position: absolute;
+            top: -10px; left: 50%;
+            transform: translateX(-50%);
+            width: 120px; height: 25px;
+            background: #2a2a2a;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            z-index: 20;
+        }
+
+        /* وضع الشاشة الكاملة */
+        .desktop-mode iframe {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        /* --- القائمة الجانبية (Sidebar) --- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100%;
+            background: var(--bg-panel);
+            z-index: 2000;
+            transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid var(--border);
+            box-shadow: -10px 0 40px rgba(0,0,0,0.5);
+        }
+
+        .sidebar.open { right: 0; }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-title { font-weight: 700; color: #fff; }
+        
+        .close-sidebar {
+            background: none; border: none; color: var(--text-muted);
+            font-size: 1.2rem; cursor: pointer; transition: 0.2s;
+        }
+        .close-sidebar:hover { color: var(--accent); transform: rotate(90deg); }
+
+        .editor-wrapper {
+            flex: 1;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .code-area {
+            flex: 1;
+            background: var(--bg-editor);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            color: #d4d4d4;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            resize: none;
+        }
+        
+        .code-area::placeholder { color: #444; }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #4f46e5; box-shadow: 0 0 15px var(--primary-glow); }
+
+        .btn-danger { background: rgba(236, 72, 153, 0.1); color: var(--accent); border: 1px solid rgba(236, 72, 153, 0.2); }
+        .btn-danger:hover { background: rgba(236, 72, 153, 0.2); }
+
+        .btn-copy { background: #27272a; color: #fff; grid-column: span 2; }
+        .btn-copy:hover { background: #3f3f46; }
+
+        /* --- التنبيهات (Toast) --- */
+        .toast-container {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            z-index: 3000;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+        }
+        .toast-container.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        .toast {
+            background: rgba(15, 15, 15, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            font-size: 0.9rem;
+        }
+        .toast i { color: var(--primary); }
+
+        /* Overlay للخلفية عند فتح القائمة */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(3px);
+            z-index: 1500;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+        .overlay.active { opacity: 1; pointer-events: all; }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .sidebar { width: 100%; right: -100%; }
+            .mobile-mode iframe { width: 90%; height: 80%; border-width: 6px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="menu-trigger" onclick="toggleMenu()">
-        <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-    </div>
-
-    <div class="side-panel" id="panel">
-        <div class="icon-bar">
-            <button class="btn" onclick="doPaste()">لصق</button>
-            <button class="btn" onclick="doDelete()">مسح</button>
-            <button class="btn" onclick="toggleMenu()" style="color:white">إغلاق</button>
+    <!-- الشريط العلوي -->
+    <header class="app-header">
+        <div class="logo">
+            <i class="fas fa-crown"></i>
+            <span>النظام الملكي <span style="font-size:0.7em; opacity:0.7; font-weight:400">V21</span></span>
         </div>
-        <textarea id="codeEditor" class="editor" placeholder="ضع كود الإمساكية هنا..." spellcheck="false"></textarea>
-    </div>
+        
+        <div class="header-tools">
+            <!-- زر تبديل العرض -->
+            <button class="tool-btn" id="viewToggle" onclick="toggleView()" title="عرض الهاتف / الشاشة">
+                <i class="fas fa-mobile-alt"></i>
+            </button>
+            <!-- زر القائمة -->
+            <button class="tool-btn" onclick="toggleSidebar()" style="border-color: var(--primary); color: var(--primary);">
+                <i class="fas fa-sliders-h"></i>
+            </button>
+        </div>
+    </header>
 
-    <div class="viewer-container">
+    <!-- منطقة العرض -->
+    <main class="viewer-area desktop-mode" id="viewerArea">
         <iframe id="output"></iframe>
+    </main>
+
+    <!-- القائمة الجانبية -->
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-title"><i class="fas fa-code"></i> محرر الكود</span>
+            <button class="close-sidebar" onclick="toggleSidebar()"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <div class="editor-wrapper">
+            <textarea id="codeEditor" class="code-area" placeholder="<!-- ضع كود HTML هنا -->" spellcheck="false"></textarea>
+            
+            <div class="action-grid">
+                <button class="btn btn-primary" onclick="doPaste()">
+                    <i class="fas fa-paste"></i> لصق الكود
+                </button>
+                <button class="btn btn-danger" onclick="doDelete()">
+                    <i class="fas fa-trash"></i> مسح الكل
+                </button>
+                <button class="btn btn-copy" onclick="copyResult()">
+                    <i class="fas fa-copy"></i> نسخ كود النتيجة
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- التنبيه -->
+    <div class="toast-container" id="toastContainer">
+        <div class="toast">
+            <i class="fas fa-check-circle"></i>
+            <span id="toastText">تمت العملية</span>
+        </div>
     </div>
 
     <script>
-        const panel = document.getElementById('panel');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
         const editor = document.getElementById('codeEditor');
         const output = document.getElementById('output');
+        const viewerArea = document.getElementById('viewerArea');
+        const viewToggle = document.getElementById('viewToggle');
+        const toastContainer = document.getElementById('toastContainer');
+        const toastText = document.getElementById('toastText');
 
-        function toggleMenu() { panel.classList.toggle('active'); }
+        let isMobile = false;
+
+        // تهيئة أولية
+        update();
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        }
+
+        function toggleView() {
+            isMobile = !isMobile;
+            if (isMobile) {
+                viewerArea.classList.remove('desktop-mode');
+                viewerArea.classList.add('mobile-mode');
+                viewToggle.innerHTML = '<i class="fas fa-desktop"></i>';
+                viewToggle.classList.add('active');
+                showToast("وضع الهاتف مفعل", "fa-mobile-alt");
+            } else {
+                viewerArea.classList.remove('mobile-mode');
+                viewerArea.classList.add('desktop-mode');
+                viewToggle.innerHTML = '<i class="fas fa-mobile-alt"></i>';
+                viewToggle.classList.remove('active');
+                showToast("وضع الشاشة الكاملة", "fa-desktop");
+            }
+        }
 
         function update() {
             const content = editor.value;
             const doc = output.contentWindow.document;
             doc.open();
-            // حقن ستايل يضمن ملء الشاشة داخل الـ iframe
             doc.write(`
                 <!DOCTYPE html>
                 <html lang="ar" dir="rtl">
                 <head>
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <style>
-                        body { 
-                            margin: 0; 
-                            padding: 0; 
-                            width: 100%; 
-                            min-height: 100vh; 
-                            background-color: #0b0f19; /* لون الخلفية المظلمة */
-                            color: white;
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                        }
-                        /* جعل الجداول والصور لا تخرج عن إطار الشاشة */
-                        table, div, img { max-width: 100%; height: auto; }
+                        body { margin: 0; padding: 0; font-family: sans-serif; overflow-x: hidden; }
+                        img, table, div { max-width: 100%; height: auto; box-sizing: border-box; }
+                        a { text-decoration: none; }
                     </style>
                 </head>
-                <body>
-                    ${content}
-                </body>
+                <body>${content}</body>
                 </html>
             `);
             doc.close();
         }
 
         editor.addEventListener('input', update);
-        function doDelete() { editor.value = ""; update(); }
+
         async function doPaste() {
             try {
                 const text = await navigator.clipboard.readText();
                 editor.value += text;
                 update();
-            } catch (err) {}
+                showToast("تم اللصق بنجاح", "fa-paste");
+            } catch (err) {
+                showToast("تعذر الوصول للحافظة", "fa-exclamation-triangle");
+            }
+        }
+
+        function doDelete() {
+            editor.value = "";
+            update();
+            showToast("تم المسح", "fa-trash");
+        }
+
+        function copyResult() {
+            const content = editor.value;
+            navigator.clipboard.writeText(content).then(() => {
+                showToast("تم نسخ الكود للحافظة", "fa-copy");
+            });
+        }
+
+        function showToast(msg, icon) {
+            toastText.textContent = msg;
+            toastContainer.querySelector('i').className = `fas ${icon}`;
+            toastContainer.classList.add('show');
+            setTimeout(() => toastContainer.classList.remove('show'), 3000);
         }
     </script>
 </body>
