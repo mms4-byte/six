@@ -3,30 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>النظام الملكي V21 - Ultimate</title>
+    <title>Marwa Mohammed - Pro Editor</title>
     
-    <!-- خطوط وأيقونات -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- الخطوط والأيقونات -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg-body: #09090b;
-            --bg-panel: #18181b;
-            --bg-editor: #1e1e1e;
-            --primary: #6366f1; /* Indigo */
-            --primary-glow: rgba(99, 102, 241, 0.4);
-            --accent: #ec4899; /* Pink */
-            --text-main: #f4f4f5;
-            --text-muted: #a1a1aa;
-            --border: #27272a;
-            --glass: rgba(24, 24, 27, 0.7);
+            --royal-navy: #020617;
+            --royal-gold: #d4af37;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --border-gold: rgba(212, 175, 55, 0.3);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --editor-bg: #0f172a;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
         
         body {
-            background-color: var(--bg-body);
+            background-color: var(--royal-navy);
             height: 100vh;
             width: 100vw;
             overflow: hidden;
@@ -36,71 +33,123 @@
             color: var(--text-main);
         }
 
-        /* --- الشريط العلوي (Header) --- */
+        /* خلفية متحركة */
+        .bg-layer { 
+            position: fixed; inset: 0; z-index: 0; 
+            background: radial-gradient(circle at top right, #0f172a, #020617); 
+            pointer-events: none;
+        }
+
+        /* --- Header (Pro Style) --- */
         .app-header {
-            height: 60px;
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
+            height: 80px;
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-gold);
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 20px;
             z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            position: relative;
         }
 
-        .logo {
-            font-weight: 800;
-            font-size: 1.2rem;
-            background: linear-gradient(to right, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
+        /* أزرار التحكم */
         .header-tools {
             display: flex;
-            gap: 10px;
+            gap: 15px;
+            z-index: 1002;
+        }
+
+        .tool-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: 0.2s;
         }
 
         .tool-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border);
+            width: 50px; height: 50px;
+            border-radius: 15px;
+            background: var(--glass-bg);
+            border: 1px solid var(--border-gold);
+            color: var(--royal-gold);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .tool-btn:hover, .tool-btn.active {
+            background: var(--royal-gold);
+            color: var(--royal-navy);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .tool-label {
+            font-size: 0.75rem;
             color: var(--text-muted);
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        /* شعار البروفايل في المنتصف */
+        .profile-container {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--border-gold);
+            border-radius: 25px;
+            padding: 8px 20px 8px 10px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .profile-img {
+            width: 45px; height: 45px;
+            border-radius: 50%;
+            border: 2px solid var(--royal-gold);
             overflow: hidden;
         }
+        .profile-img img { width: 100%; height: 100%; object-fit: cover; }
 
-        .tool-btn:hover {
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-name {
+            font-size: 1.1rem;
+            font-weight: 800;
             color: #fff;
-            background: rgba(255,255,255,0.1);
-            border-color: var(--primary);
-            box-shadow: 0 0 15px var(--primary-glow);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        .tool-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
+        .verified-icon {
+            color: #3b82f6;
+            font-size: 18px;
+            filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5));
         }
 
-        /* --- منطقة العرض (Viewer) --- */
+        /* --- Viewer Area --- */
         .viewer-area {
             flex: 1;
             position: relative;
-            background: 
-                radial-gradient(circle at 50% 50%, #1a1a1a 0%, #09090b 100%);
+            z-index: 10;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -110,134 +159,143 @@
 
         iframe {
             border: none;
-            background: #fff; /* خلفية بيضاء للكود المضمن لضمان ظهور الألوان */
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: #fff;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
-        /* وضع الهاتف الواقعي */
+        /* Mobile Frame */
         .mobile-mode iframe {
-            width: 375px;
-            height: 812px; /* iPhone X dimensions */
+            width: 375px; height: 812px;
             border-radius: 40px;
-            border: 10px solid #2a2a2a;
+            border: 12px solid #1e293b;
             position: relative;
             z-index: 10;
+            box-shadow: 0 0 0 2px var(--royal-gold), 0 25px 50px rgba(0,0,0,0.6);
         }
-        
-        /* إضافة "النتش" (الكاميرا) الوهمية للهاتف */
         .mobile-mode iframe::before {
-            content: '';
-            position: absolute;
-            top: -10px; left: 50%;
+            content: ''; position: absolute; top: -12px; left: 50%;
             transform: translateX(-50%);
-            width: 120px; height: 25px;
-            background: #2a2a2a;
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
+            width: 150px; height: 30px;
+            background: #1e293b;
+            border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
             z-index: 20;
         }
 
-        /* وضع الشاشة الكاملة */
+        /* Desktop Mode */
         .desktop-mode iframe {
-            width: 100%;
-            height: 100%;
-            border-radius: 8px;
-            border: 1px solid var(--border);
+            width: 100%; height: 100%;
+            border-radius: 12px;
+            border: 1px solid var(--border-gold);
         }
 
-        /* --- القائمة الجانبية (Sidebar) --- */
+        /* --- Sidebar (Royal Style) --- */
         .sidebar {
             position: fixed;
-            top: 0;
-            right: -400px;
-            width: 380px;
+            top: 0; right: -100%;
+            width: 100%;
+            max-width: 550px;
             height: 100%;
-            background: var(--bg-panel);
+            background: #020617;
             z-index: 2000;
             transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
-            border-left: 1px solid var(--border);
-            box-shadow: -10px 0 40px rgba(0,0,0,0.5);
+            border-left: 1px solid var(--border-gold);
+            box-shadow: -20px 0 60px rgba(0,0,0,0.8);
         }
 
         .sidebar.open { right: 0; }
 
         .sidebar-header {
             padding: 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            border-bottom: 1px solid var(--border-gold);
+            display: flex; justify-content: space-between; align-items: center;
+            background: linear-gradient(to right, rgba(212, 175, 55, 0.1), transparent);
         }
 
-        .sidebar-title { font-weight: 700; color: #fff; }
+        .sidebar-title { font-weight: 800; color: var(--royal-gold); font-size: 1.2rem; display: flex; align-items: center; gap: 10px;}
         
         .close-sidebar {
-            background: none; border: none; color: var(--text-muted);
-            font-size: 1.2rem; cursor: pointer; transition: 0.2s;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border-gold); 
+            color: var(--royal-gold);
+            width: 35px; height: 35px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.2s;
         }
-        .close-sidebar:hover { color: var(--accent); transform: rotate(90deg); }
+        .close-sidebar:hover { background: var(--royal-gold); color: var(--royal-navy); }
 
         .editor-wrapper {
             flex: 1;
-            padding: 15px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 20px;
         }
 
-        .code-area {
+        /* High Performance Editor */
+        .code-wrapper {
             flex: 1;
-            background: var(--bg-editor);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 15px;
-            color: #d4d4d4;
+            background: var(--editor-bg);
+            border-radius: 15px;
+            border: 1px solid var(--border-gold);
+            overflow: hidden;
+            position: relative;
+        }
+
+        textarea#codeEditor {
+            width: 100%; height: 100%;
+            padding: 20px;
+            background: transparent;
+            color: #e2e8f0;
             font-family: 'Fira Code', monospace;
-            font-size: 13px;
+            font-size: 14px;
             line-height: 1.6;
             resize: none;
+            border: none;
+            white-space: pre;
+            overflow: auto;
         }
-        
-        .code-area::placeholder { color: #444; }
 
+        /* Action Buttons */
         .action-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 15px;
         }
 
         .btn {
-            padding: 12px;
+            padding: 15px;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-family: 'Cairo', sans-serif;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px;
             transition: 0.2s;
-            font-size: 0.9rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: #4f46e5; box-shadow: 0 0 15px var(--primary-glow); }
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--royal-gold), #b4932a); 
+            color: #000; 
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        .btn-primary:active { transform: scale(0.98); }
 
-        .btn-danger { background: rgba(236, 72, 153, 0.1); color: var(--accent); border: 1px solid rgba(236, 72, 153, 0.2); }
-        .btn-danger:hover { background: rgba(236, 72, 153, 0.2); }
+        .btn-danger { 
+            background: rgba(239, 68, 68, 0.1); 
+            color: #ef4444; 
+            border: 1px solid rgba(239, 68, 68, 0.3); 
+        }
+        .btn-danger:hover { background: rgba(239, 68, 68, 0.2); }
 
-        .btn-copy { background: #27272a; color: #fff; grid-column: span 2; }
-        .btn-copy:hover { background: #3f3f46; }
-
-        /* --- التنبيهات (Toast) --- */
+        /* --- Toast --- */
         .toast-container {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
+            position: fixed; bottom: 30px; left: 50%;
             transform: translateX(-50%) translateY(100px);
             z-index: 3000;
             transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -246,95 +304,106 @@
         .toast-container.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
         .toast {
-            background: rgba(15, 15, 15, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
+            background: rgba(2, 6, 23, 0.95);
+            border: 1px solid var(--royal-gold);
             color: #fff;
             padding: 12px 24px;
             border-radius: 50px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            display: flex; align-items: center; gap: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             font-size: 0.9rem;
         }
-        .toast i { color: var(--primary); }
+        .toast i { color: var(--royal-gold); }
 
-        /* Overlay للخلفية عند فتح القائمة */
         .overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(3px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
             z-index: 1500;
-            opacity: 0;
-            pointer-events: none;
+            opacity: 0; pointer-events: none;
             transition: 0.3s;
         }
         .overlay.active { opacity: 1; pointer-events: all; }
 
-        /* Responsive adjustments */
         @media (max-width: 480px) {
-            .sidebar { width: 100%; right: -100%; }
-            .mobile-mode iframe { width: 90%; height: 80%; border-width: 6px; }
+            .sidebar { width: 100%; max-width: 100%; }
+            .mobile-mode iframe { width: 92%; height: 82%; border-width: 8px; }
+            .profile-container { display: none; } /* إخفاء البروفايل في الموبايل الصغير */
+            .header-tools { margin: 0 auto; }
         }
     </style>
 </head>
 <body>
 
-    <!-- الشريط العلوي -->
+    <div class="bg-layer"></div>
+
+    <!-- Header -->
     <header class="app-header">
-        <div class="logo">
-            <i class="fas fa-crown"></i>
-            <span>النظام الملكي <span style="font-size:0.7em; opacity:0.7; font-weight:400">V21</span></span>
-        </div>
-        
+        <!-- الأزرار (يسار) -->
         <div class="header-tools">
-            <!-- زر تبديل العرض -->
-            <button class="tool-btn" id="viewToggle" onclick="toggleView()" title="عرض الهاتف / الشاشة">
-                <i class="fas fa-mobile-alt"></i>
-            </button>
-            <!-- زر القائمة -->
-            <button class="tool-btn" onclick="toggleSidebar()" style="border-color: var(--primary); color: var(--primary);">
-                <i class="fas fa-sliders-h"></i>
-            </button>
+            <div class="tool-group" onclick="toggleView()">
+                <div class="tool-btn" id="viewToggle">
+                    <i class="material-icons">phone_android</i>
+                </div>
+                <span class="tool-label">عرض</span>
+            </div>
+
+            <div class="tool-group" onclick="toggleSidebar()">
+                <div class="tool-btn">
+                    <i class="material-icons">menu</i>
+                </div>
+                <span class="tool-label">قائمة</span>
+            </div>
+        </div>
+
+        <!-- البروفايل (وسط) -->
+        <div class="profile-container">
+            <div class="profile-card">
+                <div class="profile-img">
+                    <img src="https://iili.io/fbckoRn.md.jpg" alt="Marwa">
+                </div>
+                <div class="profile-info">
+                    <span class="profile-name">مروة محمد</span>
+                    <i class="material-icons verified-icon">verified</i>
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- منطقة العرض -->
+    <!-- Viewer -->
     <main class="viewer-area desktop-mode" id="viewerArea">
         <iframe id="output"></iframe>
     </main>
 
-    <!-- القائمة الجانبية -->
+    <!-- Sidebar -->
     <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <span class="sidebar-title"><i class="fas fa-code"></i> محرر الكود</span>
-            <button class="close-sidebar" onclick="toggleSidebar()"><i class="fas fa-times"></i></button>
+            <span class="sidebar-title"><i class="material-icons">code</i> محرر الكود الاحترافي</span>
+            <button class="close-sidebar" onclick="toggleSidebar()"><i class="material-icons">close</i></button>
         </div>
         
         <div class="editor-wrapper">
-            <textarea id="codeEditor" class="code-area" placeholder="<!-- ضع كود HTML هنا -->" spellcheck="false"></textarea>
+            <div class="code-wrapper">
+                <!-- محرر نصي خام للسرعة القصوى -->
+                <textarea id="codeEditor" spellcheck="false" placeholder="<!-- الصق الكود هنا للتحديث الفوري -->"></textarea>
+            </div>
             
             <div class="action-grid">
                 <button class="btn btn-primary" onclick="doPaste()">
-                    <i class="fas fa-paste"></i> لصق الكود
+                    <i class="material-icons">content_paste</i> لصق كود
                 </button>
                 <button class="btn btn-danger" onclick="doDelete()">
-                    <i class="fas fa-trash"></i> مسح الكل
-                </button>
-                <button class="btn btn-copy" onclick="copyResult()">
-                    <i class="fas fa-copy"></i> نسخ كود النتيجة
+                    <i class="material-icons">delete</i> حذف الكل
                 </button>
             </div>
         </div>
     </aside>
 
-    <!-- التنبيه -->
+    <!-- Toast -->
     <div class="toast-container" id="toastContainer">
         <div class="toast">
-            <i class="fas fa-check-circle"></i>
+            <i class="material-icons">check_circle</i>
             <span id="toastText">تمت العملية</span>
         </div>
     </div>
@@ -350,8 +419,34 @@
         const toastText = document.getElementById('toastText');
 
         let isMobile = false;
+        let updateTimeout;
 
-        // تهيئة أولية
+        // Default Template
+        const defaultCode = `<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { 
+    display: flex; justify-content: center; align-items: center; 
+    height: 100vh; background: #f0f2f5; font-family: sans-serif;
+  }
+  .card {
+    background: white; padding: 20px; border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1); text-align: center;
+  }
+  h1 { color: #d4af37; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>مروة محمد</h1>
+    <p>النظام الملكي الاحترافي</p>
+  </div>
+</body>
+</html>`;
+
+        // Initialize
+        editor.value = defaultCode;
         update();
 
         function toggleSidebar() {
@@ -364,21 +459,23 @@
             if (isMobile) {
                 viewerArea.classList.remove('desktop-mode');
                 viewerArea.classList.add('mobile-mode');
-                viewToggle.innerHTML = '<i class="fas fa-desktop"></i>';
+                viewToggle.innerHTML = '<i class="material-icons">computer</i>';
                 viewToggle.classList.add('active');
-                showToast("وضع الهاتف مفعل", "fa-mobile-alt");
+                showToast("وضع الهاتف مفعل", "phone_android");
             } else {
                 viewerArea.classList.remove('mobile-mode');
                 viewerArea.classList.add('desktop-mode');
-                viewToggle.innerHTML = '<i class="fas fa-mobile-alt"></i>';
+                viewToggle.innerHTML = '<i class="material-icons">phone_android</i>';
                 viewToggle.classList.remove('active');
-                showToast("وضع الشاشة الكاملة", "fa-desktop");
+                showToast("الشاشة الكاملة", "computer");
             }
         }
 
+        // Fast Update Function (Optimized for 10k+ lines)
         function update() {
             const content = editor.value;
             const doc = output.contentWindow.document;
+            // استخدام document.write هو الأسرع للتحديث الفوري
             doc.open();
             doc.write(`
                 <!DOCTYPE html>
@@ -397,38 +494,44 @@
             doc.close();
         }
 
-        editor.addEventListener('input', update);
+        // Input Handler with Debounce for typing
+        editor.addEventListener('input', () => {
+             if (updateTimeout) clearTimeout(updateTimeout);
+             // تحديث فوري عند التوقف عن الكتابة
+             updateTimeout = setTimeout(update, 50);
+        });
 
+        // Paste Function
         async function doPaste() {
             try {
                 const text = await navigator.clipboard.readText();
                 editor.value += text;
                 update();
-                showToast("تم اللصق بنجاح", "fa-paste");
+                showToast("تم اللصق والتشغيل", "content_paste");
             } catch (err) {
-                showToast("تعذر الوصول للحافظة", "fa-exclamation-triangle");
+                showToast("تعذر اللصق", "error");
             }
         }
 
+        // Delete Function
         function doDelete() {
             editor.value = "";
             update();
-            showToast("تم المسح", "fa-trash");
-        }
-
-        function copyResult() {
-            const content = editor.value;
-            navigator.clipboard.writeText(content).then(() => {
-                showToast("تم نسخ الكود للحافظة", "fa-copy");
-            });
+            showToast("تم الحذف", "delete");
         }
 
         function showToast(msg, icon) {
             toastText.textContent = msg;
-            toastContainer.querySelector('i').className = `fas ${icon}`;
+            toastContainer.querySelector('i').textContent = icon;
             toastContainer.classList.add('show');
-            setTimeout(() => toastContainer.classList.remove('show'), 3000);
+            setTimeout(() => toastContainer.classList.remove('show'), 2000);
         }
+
+        // Periodic Auto-Update (Backup Loop)
+        setInterval(() => {
+            update();
+        }, 1000);
+
     </script>
 </body>
 </html>
