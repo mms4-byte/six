@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Marwa Pro Editor - Final Edition</title>
+    <title>Marwa Pro Editor - Vertical Edition</title>
     
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
@@ -13,8 +13,8 @@
             --navy: #020617;
             --gold: #d4af37;
             --editor-bg: #0f172a;
-            --border-gold: rgba(212, 175, 55, 0.3);
-            --header-h: 60px;
+            --sidebar-w: 70px; /* عرض الشريط الجانبي */
+            --border-gold: rgba(212, 175, 55, 0.2);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -23,26 +23,56 @@
             background-color: var(--navy);
             height: 100vh;
             display: flex;
-            flex-direction: column;
             font-family: 'Cairo', sans-serif;
             overflow: hidden;
             color: white;
         }
 
-        /* --- Header --- */
-        .app-header {
-            height: var(--header-h);
+        /* --- Vertical Sidebar (الشريط الجانبي) --- */
+        .sidebar {
+            width: var(--sidebar-w);
             background: #000;
-            border-bottom: 1px solid var(--border-gold);
+            border-left: 1px solid var(--border-gold);
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            z-index: 1000;
+            padding: 20px 0;
+            gap: 25px;
+            z-index: 2000;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
         }
 
-        .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; color: var(--gold); }
-        .brand img { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--gold); }
+        .sidebar-brand {
+            margin-bottom: 20px;
+        }
+        .sidebar-brand img {
+            width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gold);
+            padding: 2px;
+        }
+
+        .side-btn {
+            background: none; border: none; color: #888;
+            cursor: pointer; display: flex; flex-direction: column; align-items: center;
+            width: 100%; transition: 0.3s; position: relative;
+        }
+        .side-btn i { font-size: 1.6rem; }
+        .side-btn span { font-size: 0.6rem; margin-top: 5px; font-weight: bold; white-space: nowrap; }
+        
+        .side-btn:hover, .side-btn.active { color: var(--gold); }
+        .side-btn.active::after {
+            content: ''; position: absolute; right: 0; top: 20%; height: 60%; 
+            width: 3px; background: var(--gold); box-shadow: 0 0 10px var(--gold);
+        }
+
+        .side-btn.danger:hover { color: #ff4d4d; }
+
+        /* --- Main Content --- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
 
         /* --- Workspace --- */
         .workspace {
@@ -50,6 +80,7 @@
             display: flex;
             position: relative;
             background: #050a15;
+            overflow: hidden;
         }
 
         /* Editor Panel */
@@ -59,140 +90,99 @@
             border-left: 1px solid var(--border-gold);
             display: flex;
             flex-direction: column;
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .editor-panel.hidden { width: 0; opacity: 0; pointer-events: none; }
 
         textarea#codeEditor {
-            flex: 1;
-            width: 100%;
-            padding: 20px;
-            background: transparent;
-            color: #9cdcfe;
-            font-family: 'Fira Code', monospace;
-            font-size: 14px;
-            line-height: 1.6;
-            resize: none;
-            border: none;
-            outline: none;
+            flex: 1; width: 100%; padding: 25px; background: transparent;
+            color: #9cdcfe; font-family: 'Fira Code', monospace;
+            font-size: 14px; line-height: 1.6; resize: none; border: none; outline: none;
         }
 
         /* Preview Panel */
         .preview-panel {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #111; /* خلفية داكنة لإبراز المعاينة */
-            overflow: hidden;
-            transition: 0.3s;
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            background: #0a0a0a; transition: 0.5s; position: relative;
         }
 
         .iframe-container {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%; background: #fff;
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            background: #fff;
         }
 
-        /* وضع الهاتف الحقيقي */
+        /* Phone Mode */
         .preview-panel.mobile-mode .iframe-container {
-            width: 375px;
-            height: 812px; /* أبعاد iPhone X */
-            border: 12px solid #333;
-            border-radius: 40px;
+            width: 375px; height: 750px;
+            border: 12px solid #333; border-radius: 40px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-            position: relative;
         }
 
         iframe { width: 100%; height: 100%; border: none; border-radius: inherit; }
 
-        /* --- Floating Bar --- */
-        .floating-bar {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 12px;
-            background: rgba(0,0,0,0.85);
-            padding: 8px 15px;
-            border-radius: 30px;
-            border: 1px solid var(--border-gold);
-            backdrop-filter: blur(10px);
-            z-index: 2000;
-        }
-
-        .btn {
-            background: none; border: none; color: var(--gold);
-            cursor: pointer; display: flex; flex-direction: column; align-items: center;
-            padding: 5px 10px; border-radius: 15px; transition: 0.2s;
-        }
-        .btn i { font-size: 1.4rem; }
-        .btn span { font-size: 0.65rem; margin-top: 3px; font-weight: bold; }
-        .btn:hover { background: rgba(212, 175, 55, 0.15); color: #fff; }
-        .btn.active { color: #fff; background: var(--gold); color: #000; }
-
         /* Toast */
         #toast {
-            position: fixed; top: 75px; left: 50%; transform: translateX(-50%);
-            background: var(--gold); color: #000; padding: 5px 20px;
-            border-radius: 20px; font-size: 0.8rem; font-weight: bold;
-            display: none; z-index: 3000;
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--gold); color: #000; padding: 8px 25px;
+            border-radius: 30px; font-size: 0.85rem; font-weight: bold;
+            display: none; z-index: 3000; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
         }
 
-        /* الموبايل الحقيقي */
+        @keyframes slideUp { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
+
+        /* Mobile Responsive */
         @media (max-width: 768px) {
-            .editor-panel { position: absolute; inset: 0; width: 100%; z-index: 100; transform: translateY(100%); }
-            .editor-panel.mobile-show { transform: translateY(0); }
-            .preview-panel.mobile-mode .iframe-container { width: 95%; height: 90%; }
+            .sidebar { width: 60px; }
+            .editor-panel { position: absolute; inset: 0; width: 100%; z-index: 100; transform: translateX(100%); }
+            .editor-panel.mobile-show { transform: translateX(0); }
         }
     </style>
 </head>
 <body>
 
-    <header class="app-header">
-        <div class="brand">
+    <nav class="sidebar">
+        <div class="sidebar-brand">
             <img src="https://iili.io/fbckoRn.md.jpg" alt="M">
-            <span>MARWA MODS</span>
         </div>
-        <div style="font-size: 0.7rem; color: #666;">v3.0 FINAL</div>
-    </header>
 
-    <div class="workspace">
-        <section class="editor-panel" id="editorPanel">
-            <textarea id="codeEditor" spellcheck="false" placeholder="الصق الكود هنا..."></textarea>
-        </section>
-
-        <section class="preview-panel" id="previewArea">
-            <div class="iframe-container">
-                <iframe id="output"></iframe>
-            </div>
-        </section>
-    </div>
-
-    <div class="floating-bar">
-        <button class="btn" onclick="toggleFullView()" id="viewBtn">
-            <i class="material-icons">visibility</i>
-            <span>إخفاء الكود</span>
+        <button class="side-btn" onclick="toggleFullView()" id="viewBtn">
+            <i class="material-icons">code</i>
+            <span>كتابة كود</span>
         </button>
         
-        <button class="btn" onclick="toggleMobileMode()" id="phoneBtn">
-            <i class="material-icons">smartphone</i>
-            <span>وضع الهاتف</span>
+        <button class="side-btn" onclick="toggleMobileMode()" id="phoneBtn">
+            <i class="material-icons">devices</i>
+            <span>عرض شاشة</span>
         </button>
 
-        <button class="btn" onclick="doPaste()">
+        <button class="side-btn" onclick="doPaste()">
             <i class="material-icons">content_paste</i>
-            <span>لصق</span>
+            <span>لصق كود</span>
         </button>
 
-        <button class="btn" onclick="doDelete()" style="color: #ff4d4d;">
-            <i class="material-icons">delete_sweep</i>
-            <span>مسح</span>
+        <button class="side-btn danger" onclick="doDelete()">
+            <i class="material-icons">delete_outline</i>
+            <span>حذف كود</span>
         </button>
-    </div>
+
+        <div style="margin-top: auto; font-size: 0.5rem; color: #444;">V3.5</div>
+    </nav>
+
+    <main class="main-content">
+        <div class="workspace">
+            <section class="editor-panel" id="editorPanel">
+                <textarea id="codeEditor" spellcheck="false" placeholder="أدخل الكود هنا..."></textarea>
+            </section>
+
+            <section class="preview-panel" id="previewArea">
+                <div class="iframe-container">
+                    <iframe id="output"></iframe>
+                </div>
+            </section>
+        </div>
+    </main>
 
     <div id="toast"></div>
 
@@ -204,12 +194,25 @@
         const phoneBtn = document.getElementById('phoneBtn');
         const viewBtn = document.getElementById('viewBtn');
 
-        // كود البداية
-        const welcome = `<div style="padding:40px; text-align:center; font-family:sans-serif;">
-            <h1 style="color:#d4af37;">تم تفعيل المعاينة!</h1>
-            <p>جربي الضغط على "وضع الهاتف" لرؤية السحر</p>
-        </div>`;
-        editor.value = welcome;
+        // كود افتراضي ترحيبي
+        const initialHTML = `<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { background: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; }
+  .card { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; }
+  h1 { color: #d4af37; margin: 0; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>مرحباً بكِ في MARWA MODS</h1>
+    <p>استخدمي الشريط الجانبي للتحكم</p>
+  </div>
+</body>
+</html>`;
+
+        editor.value = initialHTML;
 
         function update() {
             const doc = output.contentWindow.document;
@@ -218,46 +221,55 @@
             doc.close();
         }
 
-        // 1. زر إخفاء/إظهار الكود
+        // 1. زر كتابة كود (إخفاء وإظهار المحرر)
         function toggleFullView() {
             if (window.innerWidth <= 768) {
                 editorPanel.classList.toggle('mobile-show');
             } else {
                 editorPanel.classList.toggle('hidden');
-                const isHidden = editorPanel.classList.contains('hidden');
-                viewBtn.querySelector('i').innerText = isHidden ? 'edit' : 'visibility';
-                viewBtn.querySelector('span').innerText = isHidden ? 'تعديل الكود' : 'إخفاء الكود';
+            }
+            viewBtn.classList.toggle('active');
+            
+            const isHidden = editorPanel.classList.contains('hidden');
+            showToast(isHidden ? "تم إخفاء منطقة الكود" : "وضع التعديل نشط");
+        }
+
+        // 2. زر عرض الشاشة (تبديل بين هاتف وشاشة كاملة)
+        function toggleMobileMode() {
+            previewArea.classList.toggle('mobile-mode');
+            const isMobile = previewArea.classList.contains('mobile-mode');
+            phoneBtn.classList.toggle('active');
+            showToast(isMobile ? "وضع الهاتف" : "وضع الشاشة الكاملة");
+        }
+
+        // 3. اللصق الفوري من الحافظة
+        async function doPaste() {
+            try {
+                const text = await navigator.clipboard.readText();
+                if (text) {
+                    editor.value = text;
+                    update();
+                    showToast("تم اللصق بنجاح");
+                } else {
+                    showToast("الحافظة فارغة!");
+                }
+            } catch (err) {
+                showToast("يرجى منح إذن الوصول للحافظة");
             }
         }
 
-        // 2. زر محاكاة الهاتف (المعاينة الحقيقية)
-        function toggleMobileMode() {
-            previewArea.classList.toggle('mobile-mode');
-            const isActive = previewArea.classList.contains('mobile-mode');
-            phoneBtn.classList.toggle('active');
-            showToast(isActive ? "تم تفعيل محاكي الهاتف" : "وضع الشاشة الكاملة");
-        }
-
-        // 3. اللصق الفوري
-        async function doPaste() {
-            const text = await navigator.clipboard.readText();
-            editor.value = text;
-            update();
-            showToast("تم اللصق");
-        }
-
-        // 4. الحذف الفوري
+        // 4. الحذف الفوري بدون تأكيد
         function doDelete() {
             editor.value = "";
             update();
-            showToast("تم الحذف");
+            showToast("تم مسح الكود");
         }
 
         function showToast(msg) {
             const t = document.getElementById('toast');
             t.innerText = msg;
             t.style.display = 'block';
-            setTimeout(() => t.style.display = 'none', 1500);
+            setTimeout(() => { t.style.display = 'none'; }, 2000);
         }
 
         editor.addEventListener('input', update);
