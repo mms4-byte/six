@@ -1,297 +1,1678 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Marwa Pro - Floating Menu</title>
-    
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>المسبحة الإلكترونية</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Amiri:wght@400;700&display=swap');
 
-    <style>
-        :root {
-            --navy: #020617;
-            --gold: #d4af37;
-            --editor-bg: #0f172a;
-            --glass: rgba(15, 23, 42, 0.95);
-        }
+  :root {
+    --bg: #F5F7F2;
+    --card: rgba(255,255,255,0.92);
+    --card-border: rgba(255,255,255,0.85);
+    --text: #1A2E1A;
+    --text2: #6B7C6B;
+    --green: #0D7A4E;
+    --green-light: #10B981;
+    --green-bg: rgba(13,122,78,0.1);
+    --gold: #C9A227;
+    --gold-light: #E5C158;
+    --gold-bg: rgba(201,162,39,0.12);
+    --emerald: #059669;
+    --emerald-bg: rgba(5,150,105,0.1);
+    --teal: #0F766E;
+    --divider: rgba(13,122,78,0.1);
+    --shadow: 0 2px 20px rgba(13,122,78,0.08);
+    --shadow-lg: 0 8px 40px rgba(13,122,78,0.15);
+    --radius: 22px;
+    --radius-sm: 14px;
+    --modal-bg: #F5F7F2;
+  }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            background-color: var(--navy);
-            height: 100vh;
-            display: flex;
-            font-family: 'Cairo', sans-serif;
-            overflow: hidden;
-            color: white;
-            padding: 10px;
-        }
+  .dark {
+    --bg: #0A1410;
+    --card: rgba(16,32,24,0.92);
+    --card-border: rgba(255,255,255,0.08);
+    --text: #E8F0E8;
+    --text2: #8BA89A;
+    --divider: rgba(255,255,255,0.08);
+    --shadow: 0 2px 20px rgba(0,0,0,0.4);
+    --shadow-lg: 0 8px 40px rgba(16,185,129,0.2);
+    --modal-bg: #0F1A14;
+  }
 
-        /* --- الكبسولة العائمة الذكية --- */
-        .sidebar-container {
-            position: fixed;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            z-index: 2000;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        /* زر إظهار/إخفاء القائمة */
-        .toggle-menu-btn {
-            background: var(--gold);
-            color: black;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+  html, body {
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
 
-        .floating-sidebar {
-            width: 70px;
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px 0;
-            gap: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            transition: 0.4s;
-            overflow: hidden;
-        }
+  body {
+    font-family: 'Tajawal', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
 
-        /* إخفاء القائمة */
-        .sidebar-container.collapsed .floating-sidebar {
-            height: 0;
-            padding: 0;
-            opacity: 0;
-            pointer-events: none;
-            transform: scale(0.8);
-        }
+  /* === الخلفية المتحركة === */
+  .bg-orbs {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
 
-        .user-img {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            border: 2px solid var(--gold);
-            object-fit: cover;
-            margin-bottom: 5px;
-        }
+  .bg-orbs .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.4;
+    animation: orbFloat 25s ease-in-out infinite;
+  }
 
-        .side-btn {
-            background: none; border: none; color: #94a3b8;
-            cursor: pointer; display: flex; flex-direction: column; align-items: center;
-            transition: 0.2s; width: 100%;
-        }
-        .side-btn i { font-size: 1.6rem; }
-        .side-btn span { font-size: 0.55rem; margin-top: 4px; font-weight: bold; white-space: nowrap; }
-        .side-btn:hover, .side-btn.active { color: var(--gold); }
-        .side-btn.danger:hover { color: #ff5e5e; }
+  .dark .bg-orbs .orb { opacity: 0.2; }
 
-        /* --- منطقة العمل --- */
-        .main-layout {
-            flex: 1;
-            display: flex;
-            gap: 15px;
-            width: 100%;
-            height: 100%;
-            transition: 0.4s;
-        }
+  .bg-orbs .orb:nth-child(1) {
+    width: 500px; height: 500px;
+    background: var(--green);
+    top: -150px; right: -150px;
+  }
+  .bg-orbs .orb:nth-child(2) {
+    width: 400px; height: 400px;
+    background: var(--gold);
+    bottom: 15%; left: -120px;
+    animation-delay: -8s;
+  }
+  .bg-orbs .orb:nth-child(3) {
+    width: 350px; height: 350px;
+    background: var(--emerald);
+    top: 55%; right: -100px;
+    animation-delay: -16s;
+  }
 
-        /* تحسين استجابة حجم الشاشة */
-        .editor-panel {
-            flex: 1;
-            max-width: 45%;
-            background: var(--editor-bg);
-            border-radius: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transition: 0.4s;
-        }
-        .editor-panel.hidden { width: 0; max-width: 0; opacity: 0; }
+  @keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(40px, -50px) scale(1.15); }
+    50% { transform: translate(-30px, 40px) scale(0.9); }
+    75% { transform: translate(50px, 30px) scale(1.1); }
+  }
 
-        textarea#codeEditor {
-            flex: 1; width: 100%; padding: 25px; background: transparent;
-            color: #bae6fd; font-family: 'Fira Code', monospace;
-            font-size: 14px; line-height: 1.6; resize: none; border: none; outline: none;
-        }
+  .app {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 0 16px 100px;
+  }
 
-        .preview-panel {
-            flex: 2;
-            background: #000;
-            border-radius: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-        }
+  /* === Header === */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 12px 0 8px;
+    background: linear-gradient(to bottom, var(--bg) 70%, transparent);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+  }
 
-        .preview-content {
-            width: 100%; height: 100%;
-            background: #fff;
-            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0 12px;
+  }
 
-        /* وضع الهاتف الاحترافي */
-        .preview-panel.mobile-view .preview-content {
-            width: 375px;
-            height: 90%;
-            border-radius: 35px;
-            border: 8px solid #222;
-        }
+  .app-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, var(--green), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 
-        iframe { width: 100%; height: 100%; border: none; border-radius: inherit; }
+  .app-title svg {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+  }
 
-        /* تنبيهات */
-        #toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: var(--gold); color: #000; padding: 10px 30px;
-            border-radius: 50px; font-weight: bold; display: none; z-index: 3000;
-        }
+  @media (max-width: 380px) {
+    .app-title { font-size: 24px; }
+    .app-title svg { width: 28px; height: 28px; }
+  }
 
-        /* استجابة للهاتف */
-        @media (max-width: 768px) {
-            .sidebar-container { 
-                top: auto; bottom: 20px; left: 50%; right: auto; 
-                transform: translateX(-50%); flex-direction: column-reverse; width: 90%;
-            }
-            .floating-sidebar { flex-direction: row; width: 100%; height: 70px; justify-content: space-around; padding: 0; }
-            .sidebar-container.collapsed .floating-sidebar { width: 0; height: 0; }
-            .main-layout { flex-direction: column; padding-bottom: 80px; }
-            .editor-panel { max-width: 100%; height: 50%; }
-        }
-    </style>
+  .header-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .icon-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: var(--card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow);
+  }
+  .icon-btn:active {
+    transform: scale(0.92);
+    background: var(--divider);
+  }
+  .icon-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* === Info Tip === */
+  .info-tip {
+    background: var(--emerald-bg);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    margin: 14px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--emerald);
+    font-weight: 500;
+    line-height: 1.6;
+    border: 1px solid rgba(5,150,105,0.2);
+  }
+
+  .info-tip svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* === Tabs === */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    flex-shrink: 0;
+    padding: 10px 18px;
+    border: 1px solid var(--card-border);
+    background: var(--card);
+    border-radius: 50px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .tab svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .tab.active {
+    background: linear-gradient(135deg, var(--green), var(--emerald));
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 16px rgba(13,122,78,0.3);
+  }
+
+  .tab:active { transform: scale(0.95); }
+
+  /* === Progress Summary === */
+  .summary-card {
+    background: linear-gradient(135deg, var(--green), var(--emerald));
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 16px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .summary-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(255,255,255,0.2), transparent 60%);
+  }
+
+  .summary-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    position: relative;
+  }
+
+  .summary-title {
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .summary-title svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .summary-count {
+    font-size: 13px;
+    opacity: 0.9;
+    font-weight: 600;
+  }
+
+  .progress-bar {
+    height: 8px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 10px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-light), var(--gold));
+    border-radius: 4px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px rgba(229,193,88,0.5);
+  }
+
+  .summary-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    position: relative;
+  }
+
+  .stat-item {
+    text-align: center;
+    background: rgba(255,255,255,0.15);
+    border-radius: 12px;
+    padding: 10px 6px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .stat-value {
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    opacity: 0.9;
+    font-weight: 600;
+  }
+
+  /* === Dhikr Cards === */
+  .dhikr-card {
+    background: var(--card);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    animation: cardIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(25px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .dhikr-card.active {
+    border-color: var(--green);
+    box-shadow: 0 8px 32px rgba(13,122,78,0.2);
+    transform: scale(1.01);
+  }
+
+  .dhikr-card.completed {
+    opacity: 0.6;
+  }
+
+  .dhikr-card.completed::after {
+    content: '✓';
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    width: 32px;
+    height: 32px;
+    background: var(--green);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  .dhikr-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .dhikr-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--green), var(--emerald));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: white;
+    box-shadow: 0 4px 12px rgba(13,122,78,0.25);
+  }
+
+  .dhikr-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .dhikr-icon.gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    box-shadow: 0 4px 12px rgba(201,162,39,0.25);
+  }
+
+  .dhikr-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .dhikr-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .dhikr-subtitle {
+    font-size: 12px;
+    color: var(--text2);
+    font-weight: 500;
+  }
+
+  .dhikr-counter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--divider);
+    border-radius: 14px;
+    padding: 8px 12px;
+    min-width: 70px;
+  }
+
+  .counter-value {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--green);
+    line-height: 1;
+  }
+
+  .counter-total {
+    font-size: 11px;
+    color: var(--text2);
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  /* === Text Display === */
+  .dhikr-text {
+    font-family: 'Amiri', serif;
+    font-size: 18px;
+    line-height: 2.2;
+    color: var(--text);
+    padding: 16px;
+    background: var(--divider);
+    border-radius: var(--radius-sm);
+    margin-bottom: 14px;
+    text-align: center;
+    border-right: 3px solid var(--green);
+    max-height: 200px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  .dhikr-text::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .dhikr-text::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .dhikr-text::-webkit-scrollbar-thumb {
+    background: var(--green);
+    border-radius: 2px;
+  }
+
+  /* === Progress === */
+  .dhikr-progress {
+    height: 6px;
+    background: var(--divider);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+
+  .dhikr-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), var(--gold));
+    border-radius: 3px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* === Buttons === */
+  .dhikr-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .tasbih-btn {
+    flex: 1;
+    padding: 16px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: white;
+    background: linear-gradient(135deg, var(--green), var(--emerald));
+    box-shadow: 0 6px 20px rgba(13,122,78,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tasbih-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .tasbih-btn:hover::before { opacity: 1; }
+  .tasbih-btn:active { transform: scale(0.96); }
+
+  .tasbih-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .tasbih-btn.completed {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    box-shadow: 0 6px 20px rgba(201,162,39,0.3);
+  }
+
+  .reset-btn {
+    width: 52px;
+    height: 52px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--divider);
+    color: var(--text2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s;
+    flex-shrink: 0;
+  }
+
+  .reset-btn:active { transform: scale(0.9); }
+
+  .reset-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* === Section Title === */
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
+    margin: 20px 0 14px;
+    padding: 0 4px;
+  }
+
+  .section-title svg {
+    width: 22px;
+    height: 22px;
+    color: var(--green);
+  }
+
+  .section-badge {
+    margin-right: auto;
+    padding: 4px 12px;
+    background: var(--green-bg);
+    color: var(--green);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  /* === Toast === */
+  .toast {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    background: var(--text);
+    color: var(--bg);
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 600;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    z-index: 9999;
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+    max-width: 90%;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* === Settings Modal === */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+
+  .modal-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .modal-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--modal-bg);
+    border-radius: 28px 28px 0 0;
+    z-index: 1001;
+    transform: translateY(100%);
+    transition: transform 0.45s cubic-bezier(0.32, 0.72, 0, 1);
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 -12px 48px rgba(0,0,0,0.3);
+  }
+
+  .modal-sheet.show {
+    transform: translateY(0);
+  }
+
+  .modal-handle {
+    width: 40px;
+    height: 5px;
+    background: var(--divider);
+    border-radius: 3px;
+    margin: 12px auto 0;
+  }
+
+  .modal-header {
+    padding: 18px 20px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .modal-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .modal-title svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .modal-close {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: var(--divider);
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s;
+  }
+
+  .modal-close:active { transform: scale(0.9); }
+
+  .modal-close svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .modal-body {
+    padding: 20px 20px 40px;
+  }
+
+  .settings-section {
+    margin-bottom: 28px;
+  }
+
+  .settings-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+    padding: 0 4px;
+  }
+
+  .settings-group {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .settings-item {
+    padding: 15px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1px solid var(--divider);
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+
+  .settings-item:last-child {
+    border-bottom: none;
+  }
+
+  .settings-item:active {
+    background: var(--divider);
+  }
+
+  .settings-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .settings-icon svg {
+    width: 18px;
+    height: 18px;
+    color: white;
+  }
+
+  .settings-icon.green { background: var(--green); }
+  .settings-icon.gold { background: var(--gold); }
+  .settings-icon.emerald { background: var(--emerald); }
+  .settings-icon.teal { background: var(--teal); }
+
+  .settings-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .settings-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .settings-desc {
+    font-size: 12px;
+    color: var(--text2);
+    margin-top: 2px;
+  }
+
+  .settings-value {
+    font-size: 14px;
+    color: var(--text2);
+    font-weight: 500;
+  }
+
+  .toggle {
+    position: relative;
+    width: 51px;
+    height: 31px;
+    background: var(--divider);
+    border-radius: 31px;
+    cursor: pointer;
+    transition: background 0.3s;
+    flex-shrink: 0;
+  }
+
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 27px;
+    height: 27px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  }
+
+  .toggle.active {
+    background: var(--green);
+  }
+
+  .toggle.active::after {
+    transform: translateX(-20px);
+  }
+
+  .about-card {
+    background: linear-gradient(135deg, var(--green), var(--emerald));
+    border-radius: var(--radius);
+    padding: 28px 20px;
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(255,255,255,0.25), transparent 60%);
+  }
+
+  .about-logo {
+    margin-bottom: 12px;
+    position: relative;
+    font-size: 48px;
+  }
+
+  .about-name {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    position: relative;
+  }
+
+  .about-tagline {
+    font-size: 14px;
+    opacity: 0.95;
+    position: relative;
+  }
+
+  .dev-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    text-align: center;
+  }
+
+  .dev-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--green), var(--gold));
+    margin: 0 auto 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: white;
+    font-weight: 800;
+    box-shadow: 0 6px 24px rgba(13,122,78,0.35);
+  }
+
+  .dev-name {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .dev-role {
+    font-size: 14px;
+    color: var(--text2);
+    margin-bottom: 18px;
+  }
+
+  .version-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .version-badge {
+    padding: 7px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    background: var(--divider);
+    color: var(--text);
+  }
+
+  .version-badge.primary {
+    background: var(--green-bg);
+    color: var(--green);
+  }
+
+  /* === Animations === */
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  .pulse { animation: pulse 0.3s ease; }
+
+  @keyframes completed {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); box-shadow: 0 0 30px rgba(201,162,39,0.6); }
+    100% { transform: scale(1); }
+  }
+
+  .completed-anim { animation: completed 0.6s ease; }
+
+  ::-webkit-scrollbar { width: 0; }
+
+  @supports (padding-top: env(safe-area-inset-top)) {
+    .header { padding-top: calc(env(safe-area-inset-top) + 8px); }
+    .toast { bottom: calc(env(safe-area-inset-bottom) + 30px); }
+  }
+</style>
 </head>
 <body>
 
-    <div class="sidebar-container" id="sideContainer">
-        <button class="toggle-menu-btn" onclick="toggleMenu()" title="عرض/إخفاء القائمة">
-            <i class="material-icons" id="menuIcon">menu_open</i>
+<div class="bg-orbs">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+
+<div class="app">
+  <div class="header">
+    <div class="header-top">
+      <h1 class="app-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <circle cx="12" cy="12" r="4"/>
+          <line x1="12" y1="2" x2="12" y2="6"/>
+          <line x1="12" y1="18" x2="12" y2="22"/>
+          <line x1="2" y1="12" x2="6" y2="12"/>
+          <line x1="18" y1="12" x2="22" y2="12"/>
+        </svg>
+        المسبحة
+      </h1>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="resetAll()" aria-label="إعادة تعيين الكل">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10"/>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+          </svg>
         </button>
+        <button class="icon-btn" onclick="openSettings()" aria-label="الإعدادات">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
 
-        <nav class="floating-sidebar">
-            <img src="https://iili.io/fbckoRn.md.jpg" alt="M" class="user-img">
+  <!-- ملخص التقدم -->
+  <div class="summary-card">
+    <div class="summary-header">
+      <div class="summary-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        تقدمك اليوم
+      </div>
+      <div class="summary-count" id="summaryCount">0 / 0</div>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+    </div>
+    <div class="summary-stats">
+      <div class="stat-item">
+        <div class="stat-value" id="statCompleted">0</div>
+        <div class="stat-label">مكتمل</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="statRemaining">0</div>
+        <div class="stat-label">متبقي</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" id="statTotal">0</div>
+        <div class="stat-label">إجمالي التسبيح</div>
+      </div>
+    </div>
+  </div>
 
-            <button class="side-btn" onclick="toggleEditor()" id="btnCode">
-                <i class="material-icons">code</i>
-                <span>كتابة كود</span>
-            </button>
+  <!-- التبويبات -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('fawatih', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+      فواتح التحصين
+    </button>
+    <button class="tab" onclick="switchTab('morning', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      أذكار الصباح
+    </button>
+    <button class="tab" onclick="switchTab('closing', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+      الأذكار الختامية
+    </button>
+  </div>
 
-            <button class="side-btn" onclick="toggleView()" id="btnView">
-                <i class="material-icons">smartphone</i>
-                <span>عرض شاشة</span>
-            </button>
+  <!-- المحتوى -->
+  <div id="content"></div>
+</div>
 
-            <button class="side-btn" onclick="doPaste()">
-                <i class="material-icons">content_paste</i>
-                <span>لصق كود</span>
-            </button>
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
-            <button class="side-btn danger" onclick="doClear()">
-                <i class="material-icons">delete_sweep</i>
-                <span>حذف كود</span>
-            </button>
-        </nav>
+<!-- Modal الإعدادات -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeSettings()"></div>
+<div class="modal-sheet" id="modalSheet">
+  <div class="modal-handle"></div>
+  <div class="modal-header">
+    <h2 class="modal-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+      الإعدادات
+    </h2>
+    <button class="modal-close" onclick="closeSettings()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="about-card">
+      <div class="about-logo">📿</div>
+      <div class="about-name">المسبحة الإلكترونية</div>
+      <div class="about-tagline">أذكارك وتحصينك اليومي</div>
     </div>
 
-    <div class="main-layout" id="mainLayout">
-        <section class="editor-panel" id="editorPanel">
-            <div style="padding: 12px 20px; background: rgba(0,0,0,0.3); font-size: 0.7rem; color: var(--gold); font-weight: bold; display: flex; justify-content: space-between;">
-                <span>MARWA PRO EDITOR</span>
-                <span id="charCount">0 characters</span>
-            </div>
-            <textarea id="codeEditor" spellcheck="false" placeholder="الصق الكود هنا..."></textarea>
-        </section>
-
-        <section class="preview-panel" id="previewArea">
-            <div class="preview-content">
-                <iframe id="output"></iframe>
-            </div>
-        </section>
+    <div class="settings-section">
+      <div class="settings-section-title">المظهر</div>
+      <div class="settings-group">
+        <div class="settings-item" onclick="toggleDarkFromSettings()">
+          <div class="settings-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          </div>
+          <div class="settings-content">
+            <div class="settings-label">الوضع الداكن</div>
+            <div class="settings-desc">تبديل بين المظهر الفاتح والداكن</div>
+          </div>
+          <div class="toggle" id="darkToggle"></div>
+        </div>
+        <div class="settings-item" onclick="toggleVibration()">
+          <div class="settings-icon gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="6" y="4" width="12" height="16" rx="2"/>
+              <line x1="12" y1="18" x2="12" y2="18"/>
+            </svg>
+          </div>
+          <div class="settings-content">
+            <div class="settings-label">الاهتزاز</div>
+            <div class="settings-desc">اهتزاز عند كل تسبيحة</div>
+          </div>
+          <div class="toggle active" id="vibrationToggle"></div>
+        </div>
+        <div class="settings-item" onclick="toggleSound()">
+          <div class="settings-icon emerald">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+            </svg>
+          </div>
+          <div class="settings-content">
+            <div class="settings-label">الصوت</div>
+            <div class="settings-desc">صوت خفيف عند الضغط</div>
+          </div>
+          <div class="toggle" id="soundToggle"></div>
+        </div>
+      </div>
     </div>
 
-    <div id="toast"></div>
+    <div class="settings-section">
+      <div class="settings-section-title">المطور</div>
+      <div class="dev-card">
+        <div class="dev-avatar">م</div>
+        <div class="dev-name">مروة</div>
+        <div class="dev-role">مطورة التطبيق</div>
+        <div class="version-row">
+          <span class="version-badge primary">الإصدار 0.0.1V</span>
+          <span class="version-badge">النسخة الأولى</span>
+        </div>
+      </div>
+    </div>
 
-    <script>
-        const editor = document.getElementById('codeEditor');
-        const output = document.getElementById('output');
-        const editorPanel = document.getElementById('editorPanel');
-        const previewArea = document.getElementById('previewArea');
-        const sideContainer = document.getElementById('sideContainer');
-        const menuIcon = document.getElementById('menuIcon');
+    <div class="settings-section">
+      <div class="settings-section-title">حول التطبيق</div>
+      <div class="settings-group">
+        <div class="settings-item" onclick="showToast('📿 تطبيق تسبيح وأذكار احترافي')">
+          <div class="settings-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+          </div>
+          <div class="settings-content">
+            <div class="settings-label">حول التطبيق</div>
+            <div class="settings-desc">معلومات إضافية</div>
+          </div>
+          <div class="settings-value">›</div>
+        </div>
+        <div class="settings-item" onclick="showToast('🕌 فواتح التحصين + أذكار الصباح + الختامية')">
+          <div class="settings-icon gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+          </div>
+          <div class="settings-content">
+            <div class="settings-label">المحتوى</div>
+            <div class="settings-desc">الأذكار والقرآن</div>
+          </div>
+          <div class="settings-value">3 أقسام</div>
+        </div>
+        <div class="settings-item" onclick="showToast('🔒 جميع بياناتك محفوظة محلياً')">
+          <div class="settings-icon teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="settings-content">
+            <div class="settings-label">الخصوصية</div>
+            <div class="settings-desc">حماية بياناتك</div>
+          </div>
+          <div class="settings-value">آمن</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        function update() {
-            const doc = output.contentWindow.document;
-            doc.open();
-            doc.write(editor.value);
-            doc.close();
-            document.getElementById('charCount').innerText = editor.value.length + " characters";
+<script>
+  // === بيانات الأذكار ===
+  const dhikrData = {
+    fawatih: {
+      title: 'فواتح التحصين',
+      icon: 'shield',
+      items: [
+        {
+          title: 'آية الكرسي',
+          subtitle: 'للحفظ والوقاية',
+          text: '﴿اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۚ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۚ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۚ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ﴾',
+          count: 1,
+          icon: 'book'
+        },
+        {
+          title: 'خواتيم سورة البقرة',
+          subtitle: 'من كنز تحت العرش',
+          text: '﴿آمَنَ الرَّسُولُ بِمَا أُنْزِلَ إِلَيْهِ مِنْ رَبِّهِ وَالْمُؤْمِنُونَ ۚ كُلٌّ آمَنَ بِاللَّهِ وَمَلَائِكَتِهِ وَكُتُبِهِ وَرُسُلِهِ لَا نُفَرِّقُ بَيْنَ أَحَدٍ مِنْ رُسُلِهِ ۚ وَقَالُوا سَمِعْنَا وَأَطَعْنَا ۖ غُفْرَانَكَ رَبَّنَا وَإِلَيْكَ الْمَصِيرُ * لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا ۚ لَهَا مَا كَسَبَتْ وَعَلَيْهَا مَا اكْتَسَبَتْ ۗ رَبَّنَا لَا تُؤَاخِذْنَا إِنْ نَسِينَا أَوْ أَخْطَأْنَا ۚ رَبَّنَا وَلَا تَحْمِلْ عَلَيْنَا إِصْرًا كَمَا حَمَلْتَهُ عَلَى الَّذِينَ مِنْ قَبْلِنَا ۚ رَبَّنَا وَلَا تُحَمِّلْنَا مَا لَا طَاقَةَ لَنَا بِهِ ۖ وَاعْفُ عَنَّا وَاغْفِرْ لَنَا وَارْحَمْنَا ۚ أَنْتَ مَوْلَانَا فَانْصُرْنَا عَلَى الْقَوْمِ الْكَافِرِينَ﴾',
+          count: 1,
+          icon: 'book'
+        },
+        {
+          title: 'سورة الإخلاص',
+          subtitle: 'تعدل ثلث القرآن',
+          text: '﴿قُلْ هُوَ اللَّهُ أَحَدٌ * اللَّهُ الصَّمَدُ * لَمْ يَلِدْ وَلَمْ يُولَدْ * وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ﴾',
+          count: 3,
+          icon: 'star'
+        },
+        {
+          title: 'سورة الفلق',
+          subtitle: 'للوقاية من الحسد',
+          text: '﴿قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ * مِنْ شَرِّ مَا خَلَقَ * وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ * وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ * وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ﴾',
+          count: 3,
+          icon: 'star'
+        },
+        {
+          title: 'سورة الناس',
+          subtitle: 'للوقاية من الوسواس',
+          text: '﴿قُلْ أَعُوذُ بِرَبِّ النَّاسِ * مَلِكِ النَّاسِ * إِلَٰهِ النَّاسِ * مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ * الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ * مِنَ الْجِنَّةِ وَالنَّاسِ﴾',
+          count: 3,
+          icon: 'star'
         }
-
-        // إظهار وإخفاء القائمة العائمة
-        function toggleMenu() {
-            sideContainer.classList.toggle('collapsed');
-            menuIcon.innerText = sideContainer.classList.contains('collapsed') ? 'apps' : 'menu_open';
+      ]
+    },
+    morning: {
+      title: 'أذكار الصباح',
+      icon: 'sun',
+      items: [
+        {
+          title: 'دعاء الصباح',
+          subtitle: 'سيد الاستغفار',
+          text: 'أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',
+          count: 1,
+          icon: 'sun'
+        },
+        {
+          title: 'بسم الله الذي لا يضر',
+          subtitle: 'حفظ من كل شيء',
+          text: 'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ',
+          count: 3,
+          icon: 'shield'
+        },
+        {
+          title: 'سبحان الله وبحمده',
+          subtitle: 'عدد خلقه ورضا نفسه',
+          text: 'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ: عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ',
+          count: 3,
+          icon: 'heart'
+        },
+        {
+          title: 'سيد الاستغفار',
+          subtitle: 'من قالها موقناً بها دخل الجنة',
+          text: 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ',
+          count: 1,
+          icon: 'heart'
+        },
+        {
+          title: 'أصبحنا أشهدك',
+          subtitle: 'شهادة التوحيد',
+          text: 'اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ',
+          count: 4,
+          icon: 'star'
+        },
+        {
+          title: 'لا إله إلا الله مائة مرة',
+          subtitle: 'كانت له عدل عشر رقاب',
+          text: 'لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',
+          count: 100,
+          icon: 'star'
+        },
+        {
+          title: 'اللهم عافني',
+          subtitle: 'دعاء العافية',
+          text: 'اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَهَ إِلَّا أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ، وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لَا إِلَهَ إِلَّا أَنْتَ',
+          count: 3,
+          icon: 'shield'
+        },
+        {
+          title: 'اللهم ما أصبح بي من نعمة',
+          subtitle: 'شكر النعم',
+          text: 'اللَّهُمَّ مَا أَصْبَحَ بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ، فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ',
+          count: 1,
+          icon: 'heart'
+        },
+        {
+          title: 'رضيت بالله رباً',
+          subtitle: 'كان حقاً على الله أن يرضيه',
+          text: 'رَضِيتُ بِاللَّهِ رَبّاً، وَبِالْإِسْلَامِ دِيناً، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيّاً',
+          count: 3,
+          icon: 'star'
+        },
+        {
+          title: 'دعاء الحفظ الشامل',
+          subtitle: 'اللهم إني أسألك العفو والعافية',
+          text: 'اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، اللَّهُمَّ اسْتُرْ عَوْرَاتِي، وَآمِنْ رَوْعَاتِي، اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ، وَمِنْ خَلْفِي، وَعَنْ يَمِينِي، وَعَنْ شِمَالِي، وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي',
+          count: 1,
+          icon: 'shield'
+        },
+        {
+          title: 'حسبي الله',
+          subtitle: 'كفاه الله ما أهمه',
+          text: 'حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ',
+          count: 7,
+          icon: 'shield'
+        },
+        {
+          title: 'يا حي يا قيوم',
+          subtitle: 'استغاثة بالله',
+          text: 'يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ',
+          count: 1,
+          icon: 'heart'
         }
-
-        function toggleEditor() {
-            editorPanel.classList.toggle('hidden');
-            showToast(editorPanel.classList.contains('hidden') ? "تم إخفاء المحرر" : "تم فتح المحرر");
+      ]
+    },
+    closing: {
+      title: 'الأذكار الختامية',
+      icon: 'moon',
+      items: [
+        {
+          title: 'أعوذ بكلمات الله',
+          subtitle: 'حفظ من الشرور',
+          text: 'أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ',
+          count: 3,
+          icon: 'shield'
+        },
+        {
+          title: 'سبحان الله',
+          subtitle: 'التسبيح المأثور',
+          text: 'سُبْحَانَ اللَّهِ',
+          count: 100,
+          icon: 'heart'
+        },
+        {
+          title: 'أستغفر الله',
+          subtitle: 'الاستغفار',
+          text: 'أَسْتَغْفِرُ اللَّهَ',
+          count: 100,
+          icon: 'heart'
+        },
+        {
+          title: 'الحمد لله',
+          subtitle: 'تملأ الميزان',
+          text: 'الْحَمْدُ لِلَّهِ',
+          count: 100,
+          icon: 'heart'
         }
+      ]
+    }
+  };
 
-        function toggleView() {
-            previewArea.classList.toggle('mobile-view');
-            const isMobile = previewArea.classList.contains('mobile-view');
-            showToast(isMobile ? "وضع الهاتف" : "وضع الشاشة الكاملة");
-        }
+  // === الحالة ===
+  let currentTab = 'fawatih';
+  let counters = {};
+  let settings = {
+    dark: false,
+    vibration: true,
+    sound: false
+  };
 
-        async function doPaste() {
-            try {
-                const text = await navigator.clipboard.readText();
-                if(text) {
-                    editor.value = text;
-                    update();
-                    showToast("تم اللصق المباشر");
-                }
-            } catch(e) { showToast("يرجى منح إذن اللصق"); }
-        }
+  // === أيقونات SVG ===
+  const icons = {
+    shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+    book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+    star: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+    sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>',
+    moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
+    heart: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
+    tasbih: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>',
+    reset: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>'
+  };
 
-        function doClear() {
-            editor.value = "";
-            update();
-            showToast("تم الحذف");
-        }
+  // === تهيئة ===
+  function init() {
+    loadState();
+    loadSettings();
+    renderContent();
+    updateSummary();
+  }
 
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.style.display = 'block';
-            setTimeout(() => t.style.display = 'none', 1500);
-        }
+  // === تحميل الحالة ===
+  function loadState() {
+    const saved = localStorage.getItem('tasbihState');
+    if (saved) {
+      counters = JSON.parse(saved);
+    } else {
+      // تهيئة العدادات
+      Object.keys(dhikrData).forEach(tab => {
+        dhikrData[tab].items.forEach((item, idx) => {
+          counters[`${tab}_${idx}`] = 0;
+        });
+      });
+    }
+  }
 
-        editor.value = `<div style="padding:40px; text-align:center; height:100vh; display:flex; flex-direction:column; justify-content:center; background:#fff; font-family:sans-serif;">
-    <h1 style="color:#d4af37;">Marwa Mods V4.0</h1>
-    <p>جربي زر "المينو" الذهبي لإخفاء الأدوات!</p>
-</div>`;
+  function saveState() {
+    localStorage.setItem('tasbihState', JSON.stringify(counters));
+  }
 
-        editor.addEventListener('input', update);
-        window.onload = update;
-    </script>
+  function loadSettings() {
+    const saved = localStorage.getItem('tasbihSettings');
+    if (saved) {
+      settings = JSON.parse(saved);
+    }
+    if (settings.dark) {
+      document.body.classList.add('dark');
+    }
+    document.getElementById('darkToggle').classList.toggle('active', settings.dark);
+    document.getElementById('vibrationToggle').classList.toggle('active', settings.vibration);
+    document.getElementById('soundToggle').classList.toggle('active', settings.sound);
+  }
+
+  function saveSettings() {
+    localStorage.setItem('tasbihSettings', JSON.stringify(settings));
+  }
+
+  // === عرض المحتوى ===
+  function renderContent() {
+    const content = document.getElementById('content');
+    const data = dhikrData[currentTab];
+    
+    let html = `<div class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        ${icons[data.icon].match(/<svg[^>]*>(.*)<\/svg>/)[1]}
+      </svg>
+      ${data.title}
+      <span class="section-badge" id="sectionBadge">0 / ${data.items.length}</span>
+    </div>`;
+
+    data.items.forEach((item, idx) => {
+      const key = `${currentTab}_${idx}`;
+      const count = counters[key] || 0;
+      const completed = count >= item.count;
+      const progress = (count / item.count) * 100;
+
+      html += `
+        <div class="dhikr-card ${completed ? 'completed' : ''}" id="card_${idx}" style="animation-delay: ${idx * 0.05}s">
+          <div class="dhikr-header">
+            <div class="dhikr-icon ${item.count > 1 ? '' : 'gold'}">
+              ${icons[item.icon]}
+            </div>
+            <div class="dhikr-info">
+              <div class="dhikr-title">${item.title}</div>
+              <div class="dhikr-subtitle">${item.subtitle}</div>
+            </div>
+            <div class="dhikr-counter">
+              <div class="counter-value" id="count_${idx}">${count}</div>
+              <div class="counter-total">/ ${item.count}</div>
+            </div>
+          </div>
+          <div class="dhikr-text">${item.text}</div>
+          <div class="dhikr-progress">
+            <div class="dhikr-progress-fill" id="progress_${idx}" style="width: ${progress}%"></div>
+          </div>
+          <div class="dhikr-actions">
+            <button class="tasbih-btn ${completed ? 'completed' : ''}" id="btn_${idx}" onclick="tasbih(${idx})">
+              ${icons.tasbih}
+              ${completed ? 'تم ✓' : 'سبّح'}
+            </button>
+            <button class="reset-btn" onclick="resetDhikr(${idx})" aria-label="إعادة تعيين">
+              ${icons.reset}
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    content.innerHTML = html;
+    updateSectionBadge();
+  }
+
+  // === التبديل بين التبويبات ===
+  function switchTab(tab, btn) {
+    currentTab = tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    renderContent();
+  }
+
+  // === التسبيح ===
+  function tasbih(idx) {
+    const key = `${currentTab}_${idx}`;
+    const item = dhikrData[currentTab].items[idx];
+    
+    if (counters[key] >= item.count) {
+      showToast('✅ تم إكمال هذا الذكر');
+      return;
+    }
+
+    counters[key]++;
+    saveState();
+
+    // تحديث الواجهة
+    const countEl = document.getElementById(`count_${idx}`);
+    const progressEl = document.getElementById(`progress_${idx}`);
+    const btnEl = document.getElementById(`btn_${idx}`);
+    const cardEl = document.getElementById(`card_${idx}`);
+
+    countEl.textContent = counters[key];
+    const progress = (counters[key] / item.count) * 100;
+    progressEl.style.width = progress + '%';
+
+    // أنيميشن
+    countEl.parentElement.classList.add('pulse');
+    setTimeout(() => countEl.parentElement.classList.remove('pulse'), 300);
+
+    // اهتزاز
+    if (settings.vibration && navigator.vibrate) {
+      navigator.vibrate(30);
+    }
+
+    // صوت
+    if (settings.sound) {
+      playClickSound();
+    }
+
+    // إذا اكتمل
+    if (counters[key] >= item.count) {
+      cardEl.classList.add('completed');
+      btnEl.classList.add('completed');
+      btnEl.innerHTML = `${icons.tasbih} تم ✓`;
+      btnEl.classList.add('completed-anim');
+      setTimeout(() => btnEl.classList.remove('completed-anim'), 600);
+      
+      if (settings.vibration && navigator.vibrate) {
+        navigator.vibrate([50, 50, 50]);
+      }
+      
+      showToast(`🎉 تم إكمال: ${item.title}`);
+    }
+
+    updateSummary();
+    updateSectionBadge();
+  }
+
+  // === إعادة تعيين ذكر واحد ===
+  function resetDhikr(idx) {
+    const key = `${currentTab}_${idx}`;
+    counters[key] = 0;
+    saveState();
+    renderContent();
+    updateSummary();
+    showToast('🔄 تم إعادة التعيين');
+  }
+
+  // === إعادة تعيين الكل ===
+  function resetAll() {
+    if (!confirm('هل تريد إعادة تعيين جميع الأذكار؟')) return;
+    
+    Object.keys(counters).forEach(key => {
+      counters[key] = 0;
+    });
+    saveState();
+    renderContent();
+    updateSummary();
+    showToast('🔄 تم إعادة تعيين الكل');
+  }
+
+  // === تحديث الملخص ===
+  function updateSummary() {
+    let totalItems = 0;
+    let completedItems = 0;
+    let totalTasbih = 0;
+
+    Object.keys(dhikrData).forEach(tab => {
+      dhikrData[tab].items.forEach((item, idx) => {
+        totalItems++;
+        const count = counters[`${tab}_${idx}`] || 0;
+        totalTasbih += count;
+        if (count >= item.count) completedItems++;
+      });
+    });
+
+    document.getElementById('statCompleted').textContent = completedItems;
+    document.getElementById('statRemaining').textContent = totalItems - completedItems;
+    document.getElementById('statTotal').textContent = totalTasbih;
+    document.getElementById('summaryCount').textContent = `${completedItems} / ${totalItems}`;
+    
+    const progress = totalItems > 0 ? (completedItems / totalItems) * 100 : 0;
+    document.getElementById('progressFill').style.width = progress + '%';
+  }
+
+  // === تحديث شارة القسم ===
+  function updateSectionBadge() {
+    const data = dhikrData[currentTab];
+    let completed = 0;
+    data.items.forEach((item, idx) => {
+      const count = counters[`${currentTab}_${idx}`] || 0;
+      if (count >= item.count) completed++;
+    });
+    const badge = document.getElementById('sectionBadge');
+    if (badge) {
+      badge.textContent = `${completed} / ${data.items.length}`;
+    }
+  }
+
+  // === صوت النقر ===
+  function playClickSound() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.frequency.value = 800;
+      gain.gain.setValueAtTime(0.1, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.1);
+    } catch (e) {}
+  }
+
+  // === الإعدادات ===
+  function toggleDarkFromSettings() {
+    settings.dark = !settings.dark;
+    document.body.classList.toggle('dark', settings.dark);
+    document.getElementById('darkToggle').classList.toggle('active', settings.dark);
+    saveSettings();
+  }
+
+  function toggleVibration() {
+    settings.vibration = !settings.vibration;
+    document.getElementById('vibrationToggle').classList.toggle('active', settings.vibration);
+    saveSettings();
+    showToast(settings.vibration ? '📳 تم تفعيل الاهتزاز' : '🔇 تم إيقاف الاهتزاز');
+  }
+
+  function toggleSound() {
+    settings.sound = !settings.sound;
+    document.getElementById('soundToggle').classList.toggle('active', settings.sound);
+    saveSettings();
+    showToast(settings.sound ? '🔊 تم تفعيل الصوت' : '🔇 تم إيقاف الصوت');
+  }
+
+  function openSettings() {
+    document.getElementById('modalOverlay').classList.add('show');
+    document.getElementById('modalSheet').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSettings() {
+    document.getElementById('modalOverlay').classList.remove('show');
+    document.getElementById('modalSheet').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  // === Toast ===
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
+  // === Init ===
+  init();
+</script>
+
 </body>
 </html>
